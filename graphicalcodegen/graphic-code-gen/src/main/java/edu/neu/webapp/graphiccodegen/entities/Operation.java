@@ -1,50 +1,47 @@
 package edu.neu.webapp.graphiccodegen.entities;
 
 import java.io.Serializable;
-import java.util.Collection;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Operation implements Serializable{
+public class Operation extends Statement implements Serializable{
 	
 	 /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	@Id 
-	@OneToOne(optional=false)
-	private Statement operationId;
-	
 	@ManyToOne// Foreign Key
     @JoinColumn(name = "operationType", referencedColumnName = "oType")
 	private OperationType operationType;
 
-	@OneToMany(mappedBy = "script", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Collection<Data> datas;
+	@ManyToMany
+    @JoinColumn(name = "data1", nullable=false, referencedColumnName = "dataName")
+	private Data data1;
+
+	@ManyToMany
+    @JoinColumn(name = "data2", nullable=true, referencedColumnName = "dataName")
+	private Data data2;
+
+	@ManyToMany
+    @JoinColumn(name = "data3", nullable=true, referencedColumnName = "dataName")
+	private Data data3;
 	
-	@OneToOne(optional=false, mappedBy="dataName")
+	@OneToOne
+	@JoinColumn(name="result", nullable=true)
 	private Data result;
 	
 	private String operator1;
 	private String operator2;
 	
-	public Operation() {
-		super();
-	}
-
-	public Operation(Statement operationId, OperationType operationType,
-			Data data1, Data data2, Data data3, Data result, String operator1,
-			String operator2) {
-		super();
-		this.operationId = operationId;
+	public Operation(StatementType statementType, Script script, OperationType operationType, Data data1, Data data2,
+			Data data3, Data result, String operator1, String operator2) {
+		super(statementType, script);
 		this.operationType = operationType;
 		this.data1 = data1;
 		this.data2 = data2;
@@ -52,14 +49,6 @@ public class Operation implements Serializable{
 		this.result = result;
 		this.operator1 = operator1;
 		this.operator2 = operator2;
-	}
-
-	public Statement getOperationId() {
-		return operationId;
-	}
-
-	public void setOperationId(Statement operationId) {
-		this.operationId = operationId;
 	}
 
 	public OperationType getOperationType() {
@@ -120,10 +109,10 @@ public class Operation implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Operation [operationId=" + operationId + ", operationType="
-				+ operationType + ", data1=" + data1 + ", data2=" + data2
-				+ ", data3=" + data3 + ", result=" + result + ", operator1="
-				+ operator1 + ", operator2=" + operator2 + "]";
-	}	
-
+		return "Operation [operationType=" + operationType + ", data1=" + data1
+				+ ", data2=" + data2 + ", data3=" + data3 + ", result="
+				+ result + ", operator1=" + operator1 + ", operator2="
+				+ operator2 + "]";
+	}
+	
 }

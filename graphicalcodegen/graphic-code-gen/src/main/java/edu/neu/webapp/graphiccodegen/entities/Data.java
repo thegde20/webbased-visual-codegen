@@ -3,29 +3,23 @@ package edu.neu.webapp.graphiccodegen.entities;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 
 @Entity
-public class Data implements Serializable{
+public class Data extends Statement implements Serializable{
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Id
 	private String dataName;
 	
 	private String dataValue;
 	
 	private String dataType;
 
-	public Data() {
-		super();
-	}
-
-	public Data(String dataName, String dataValue, String dataType) {
-		super();
+	public Data(StatementType statementType, Script script, String dataName, String dataValue, String dataType) {
+		super(statementType, script);
 		this.dataName = dataName;
 		this.dataValue = dataValue;
 		this.dataType = dataType;

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -16,7 +17,7 @@ public class Statement implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Id @GeneratedValue
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private int statementId;
 	
 	@ManyToOne// Foreign Key
@@ -31,9 +32,8 @@ public class Statement implements Serializable{
 		super();
 	}
 
-	public Statement(int statementId, StatementType statementType, Script script) {
+	public Statement(StatementType statementType, Script script) {
 		super();
-		this.statementId = statementId;
 		this.statementType = statementType;
 		this.script = script;
 	}
