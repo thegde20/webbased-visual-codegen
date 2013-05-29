@@ -58,33 +58,104 @@
 			</form>
 		</c:when>
 		<c:when test="${scriptstmtType eq 'Operational'}">
-		<form name="operationtypeform" method="POST" action="renderoperation.html"> 
+			<form name="operationtypeform" method="POST"
+				action="renderoperation.html">
 				<table border="" cellspacing="4" cellpadding="4">
 					<tr>
 						<td>Operation Type:</td>
 						<td><select name="oType">
-								<option value="unary">Unary</option>
-								<option value="binary">Binary</option>
-								<option value="ternary">Ternary</option>
+								<c:forEach var="operationType" items="${operationTypes}">
+									<option value="${operationType.getoType()}">${operationType.getoType()}</option>
+								</c:forEach>
 						</select></td>
-						<td><input type="submit" value="Go" /></td></tr></table></form>
-					<form name="operationform" method="POST" action="operationWithValues.html">
+						<td><input type="submit" value="Go" /></td>
+					</tr>
+				</table>
+			</form>
+			<hr>
+			<form name="operationform" method="POST" action="operationWithValues.html">
 							<c:choose>
-								<c:when test="${param.oType eq 'unary'}">
+								<c:when test="${param.oType eq 'Unary'}">
 									<table>
 										<tr>
 											<th>Operand</th>
 											<th>Operator</th>
 										</tr>
 										<tr>
-											<td><select name="data1">
+											<td><select name="unaryData1">
 													<c:forEach var="data" items="${dataStatements}">
 														<option value="${data.getStatementId()}">${data.getDataName()}</option>
 													</c:forEach>
 											</select></td>
-											<td><select name="operator1">
+											<td><select name="unaryOperator">
 													<option value="++">++</option>
 													<option value="--">--</option>
+											</select></td>
+											<td><input type="submit" value="Add operation" /></td>
+										</tr>
+									</table>
+								</c:when>
+								<c:when test="${param.oType eq 'Binary'}">
+									<table>
+										<tr>
+											<th>Operand</th>
+											<th>Operator</th>
+											<th>Operand</th>
+										</tr>
+										<tr>
+											<td><select name="binaryData1">
+													<c:forEach var="data" items="${dataStatements}">
+														<option value="${data.getStatementId()}">${data.getDataName()}</option>
+													</c:forEach>
+											</select></td>
+											<td><select name="binaryOperator">
+													<option value="+">+</option>
+													<option value="-">-</option>
+													<option value="*">*</option>
+													<option value="/">/</option>
+													<option value="^">^</option>
+											</select></td>
+											<td><select name="binaryData2">
+													<c:forEach var="data" items="${dataStatements}">
+														<option value="${data.getStatementId()}">${data.getDataName()}</option>
+													</c:forEach>
+											</select></td>
+											<td><input type="submit" value="Add operation" /></td>
+										</tr>
+									</table>
+								</c:when>
+								<c:when test="${param.oType eq 'Ternary'}">
+									<table>
+										<tr>
+											<th>Operand</th>
+											<th>Operator</th>
+											<th>Operand</th>
+											<th>Operator</th>
+											<th>Operand</th>
+										</tr>
+										<tr>
+											<td><select name="ternaryData1">
+													<c:forEach var="data" items="${dataStatements}">
+														<option value="${data.getStatementId()}">${data.getDataName()}</option>
+													</c:forEach>
+											</select></td>
+											<td><select name="ternaryOperator1">
+													<option value="?">?</option>
+													<option value=":">:</option>
+											</select></td>
+											<td><select name="ternaryData2">
+													<c:forEach var="data" items="${dataStatements}">
+														<option value="${data.getStatementId()}">${data.getDataName()}</option>
+													</c:forEach>
+											</select></td>
+											<td><select name="ternaryOperator2">
+													<option value="?">?</option>
+													<option value=":">:</option>
+											</select></td>
+											<td><select name="ternaryData3">
+													<c:forEach var="data" items="${dataStatements}">
+														<option value="${data.getStatementId()}">${data.getDataName()}</option>
+													</c:forEach>
 											</select></td>
 											<td><input type="submit" value="Add operation" /></td>
 										</tr>

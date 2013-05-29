@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import edu.neu.webapp.graphiccodegen.dao.DataDao;
 import edu.neu.webapp.graphiccodegen.dao.OperationDao;
+import edu.neu.webapp.graphiccodegen.dao.OperationTypeDao;
 import edu.neu.webapp.graphiccodegen.dao.ScriptDao;
 import edu.neu.webapp.graphiccodegen.dao.StatementTypeDao;
 import edu.neu.webapp.graphiccodegen.entities.Data;
 import edu.neu.webapp.graphiccodegen.entities.Operation;
+import edu.neu.webapp.graphiccodegen.entities.OperationType;
 import edu.neu.webapp.graphiccodegen.entities.StatementType;
 
 @Controller
@@ -33,6 +35,9 @@ public class DataController {
 	
 	@Autowired
     private StatementTypeDao statementTypeDao;
+	
+	@Autowired
+    private OperationTypeDao operationTypeDao;
 	
 	
 	 @RequestMapping(value="/statementWithValues")
@@ -98,6 +103,9 @@ public class DataController {
 
 			List<Data> dataStatements = dataDao.getAllDataStatements();
 			model.put("dataStatements", dataStatements);
+			
+			List<OperationType> operationTypes = operationTypeDao.getAllOperationTypes();
+	        model.put("operationTypes", operationTypes);
 			
 			List<Operation> operationStatements = operationDao.getAllOperationStatements();
 		 	model.put("operationStatements", operationStatements);

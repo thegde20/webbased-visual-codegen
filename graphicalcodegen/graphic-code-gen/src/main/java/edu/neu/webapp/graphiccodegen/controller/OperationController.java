@@ -17,6 +17,7 @@ import edu.neu.webapp.graphiccodegen.dao.ScriptDao;
 import edu.neu.webapp.graphiccodegen.dao.StatementTypeDao;
 import edu.neu.webapp.graphiccodegen.entities.Data;
 import edu.neu.webapp.graphiccodegen.entities.Operation;
+import edu.neu.webapp.graphiccodegen.entities.OperationType;
 import edu.neu.webapp.graphiccodegen.entities.StatementType;
 
 @Controller
@@ -42,20 +43,40 @@ public class OperationController {
 	    public String installData(ModelMap model, HttpServletRequest request) {
 	    	
 	        String scriptName = String.valueOf(model.get("sessionScriptName"));
-	        System.out.println("script chosen "+scriptName);
 	        String scriptStmtType = String.valueOf(model.get("sessionStatementType"));
-	        System.out.println("scriptStmtType chosen "+scriptStmtType);
 	        String operationType = String.valueOf(model.get("sessionOperationType"));
-	        System.out.println("operationType chosen "+operationType);
-	        int dataStmtId = Integer.parseInt(request.getParameter("data1"));
-	        System.out.println("data1 chosen "+dataStmtId);
-	       
-	        operationDao.persist(new Operation(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), operationTypeDao.getOperationType(operationType), dataDao.getData(dataStmtId), 
-	        		dataDao.getData(0), dataDao.getData(0), dataDao.getData(0), "++", "--"));
+	        System.out.println("Chosen Operation Type "+operationType);
+	        System.out.println("------------------------------------");
 	        
-	        renderPageValues(model);
-	        return "scriptstatementpage";
-	    }
+		if(operationType.equalsIgnoreCase("Unary")) {
+
+			int dataStmtId = Integer.parseInt(request.getParameter("unaryData1"));
+			String operator = request.getParameter("unaryOperator");
+			operationDao.persist(new Operation(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), 
+					operationTypeDao.getOperationType(operationType), dataDao.getData(dataStmtId), dataDao.getData(0), dataDao.getData(0),
+					dataDao.getData(0), operator, null));
+		}else if(operationType.equalsIgnoreCase("Binary")){
+			
+			int dataStmtId1 = Integer.parseInt(request.getParameter("binaryData1"));
+			int dataStmtId2 = Integer.parseInt(request.getParameter("binaryData2"));
+			String operator = request.getParameter("binaryOperator");
+			operationDao.persist(new Operation(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), 
+					operationTypeDao.getOperationType(operationType), dataDao.getData(dataStmtId1), dataDao.getData(dataStmtId2), dataDao.getData(0),
+					dataDao.getData(0), operator, null));
+		}else  if(operationType.equalsIgnoreCase("Ternary")){
+			int dataStmtId1 = Integer.parseInt(request.getParameter("ternaryData1"));
+			int dataStmtId2 = Integer.parseInt(request.getParameter("ternaryData2"));
+			int dataStmtId3 = Integer.parseInt(request.getParameter("ternaryData3"));
+			String operator1 = request.getParameter("ternaryOperator1");
+			String operator2 = request.getParameter("ternaryOperator2");
+			operationDao.persist(new Operation(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), 
+					operationTypeDao.getOperationType(operationType), dataDao.getData(dataStmtId1), dataDao.getData(dataStmtId2), dataDao.getData(dataStmtId3),
+					dataDao.getData(0), operator1, operator2));
+		}
+
+		renderPageValues(model);
+		return "scriptstatementpage";
+	}
 	 
 	 @RequestMapping(value="/renderoperation")
 	    public String renderChosenOperation(ModelMap model, HttpServletRequest request) {
@@ -89,6 +110,9 @@ public class OperationController {
 		 
 		 	List<Operation> operationStatements = operationDao.getAllOperationStatements();
 		 	model.put("operationStatements", operationStatements);
+		 	
+			List<OperationType> operationTypes = operationTypeDao.getAllOperationTypes();
+	        model.put("operationTypes", operationTypes);
 		 
 			List<StatementType> stmtTypes = statementTypeDao.getAllStatementTypes();
 			model.put("statementTypes", stmtTypes);

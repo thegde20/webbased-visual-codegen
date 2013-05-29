@@ -17,6 +17,9 @@
 			<td><a href="statementtypemain.html">Statement Types</a></td>
 		</tr>
 		<tr>
+			<td><a href="operationtypemain.html">Operation Types</a></td>
+		</tr>
+		<tr>
 			<td><a href="scriptMain.html">Scripts</a></td>
 		</tr>
 	</table>
