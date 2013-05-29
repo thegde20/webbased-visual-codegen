@@ -47,11 +47,5 @@ public class OperationType implements Serializable{
 	public void setOperations(Collection<Operation> operations) {
 		this.operations = operations;
 	}
-
-	@Override
-	public String toString() {
-		return "OperationType [oType=" + oType + ", operations=" + operations
-				+ "]";
-	}
 	
 }

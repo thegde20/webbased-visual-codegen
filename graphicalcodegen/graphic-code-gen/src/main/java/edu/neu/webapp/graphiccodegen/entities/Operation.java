@@ -106,13 +106,5 @@ public class Operation extends Statement implements Serializable{
 	public void setOperator2(String operator2) {
 		this.operator2 = operator2;
 	}
-
-	@Override
-	public String toString() {
-		return "Operation [operationType=" + operationType + ", data1=" + data1
-				+ ", data2=" + data2 + ", data3=" + data3 + ", result="
-				+ result + ", operator1=" + operator1 + ", operator2="
-				+ operator2 + "]";
-	}
 	
 }
