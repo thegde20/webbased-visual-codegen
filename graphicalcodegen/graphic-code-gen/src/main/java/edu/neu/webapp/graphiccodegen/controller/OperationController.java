@@ -45,8 +45,6 @@ public class OperationController {
 	        String scriptName = String.valueOf(model.get("sessionScriptName"));
 	        String scriptStmtType = String.valueOf(model.get("sessionStatementType"));
 	        String operationType = String.valueOf(model.get("sessionOperationType"));
-	        System.out.println("Chosen Operation Type "+operationType);
-	        System.out.println("------------------------------------");
 	        
 		if(operationType.equalsIgnoreCase("Unary")) {
 
@@ -57,21 +55,24 @@ public class OperationController {
 					dataDao.getData(0), operator, null));
 		}else if(operationType.equalsIgnoreCase("Binary")){
 			
+			int resultId = Integer.parseInt(request.getParameter("result"));
 			int dataStmtId1 = Integer.parseInt(request.getParameter("binaryData1"));
 			int dataStmtId2 = Integer.parseInt(request.getParameter("binaryData2"));
 			String operator = request.getParameter("binaryOperator");
 			operationDao.persist(new Operation(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), 
 					operationTypeDao.getOperationType(operationType), dataDao.getData(dataStmtId1), dataDao.getData(dataStmtId2), dataDao.getData(0),
-					dataDao.getData(0), operator, null));
+					dataDao.getData(resultId), operator, null));
 		}else  if(operationType.equalsIgnoreCase("Ternary")){
+			
+			int resultId = Integer.parseInt(request.getParameter("result"));
 			int dataStmtId1 = Integer.parseInt(request.getParameter("ternaryData1"));
 			int dataStmtId2 = Integer.parseInt(request.getParameter("ternaryData2"));
 			int dataStmtId3 = Integer.parseInt(request.getParameter("ternaryData3"));
-			String operator1 = request.getParameter("ternaryOperator1");
-			String operator2 = request.getParameter("ternaryOperator2");
+			String operator1 = "?";
+			String operator2 = ":";
 			operationDao.persist(new Operation(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), 
 					operationTypeDao.getOperationType(operationType), dataDao.getData(dataStmtId1), dataDao.getData(dataStmtId2), dataDao.getData(dataStmtId3),
-					dataDao.getData(0), operator1, operator2));
+					dataDao.getData(resultId), operator1, operator2));
 		}
 
 		renderPageValues(model);

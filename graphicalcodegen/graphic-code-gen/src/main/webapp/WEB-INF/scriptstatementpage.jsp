@@ -43,6 +43,7 @@
 						<td>Type:</td>
 						<td><Select name="varType">
 								<option value="int">Integer</option>
+								<option value="double">Double</option>
 								<option value="boolean">Boolean</option>
 								<option value="string">String</option>
 								<option value="date">Date</option>
@@ -85,7 +86,9 @@
 										<tr>
 											<td><select name="unaryData1">
 													<c:forEach var="data" items="${dataStatements}">
-														<option value="${data.getStatementId()}">${data.getDataName()}</option>
+														<c:if test="${data.getDataType() eq 'double' or data.getDataType() eq 'int'}">
+															<option value="${data.getStatementId()}">${data.getDataName()}</option>
+														</c:if>
 													</c:forEach>
 											</select></td>
 											<td><select name="unaryOperator">
@@ -101,6 +104,8 @@
 										<tr>
 											<th>Operand</th>
 											<th>Operator</th>
+											<th>Operand</th>
+											<th>=</th>
 											<th>Operand</th>
 										</tr>
 										<tr>
@@ -121,6 +126,12 @@
 														<option value="${data.getStatementId()}">${data.getDataName()}</option>
 													</c:forEach>
 											</select></td>
+											<td>=</td>
+											<td><select name="result">
+													<c:forEach var="data" items="${dataStatements}">
+														<option value="${data.getStatementId()}">${data.getDataName()}</option>
+													</c:forEach>
+											</select></td>
 											<td><input type="submit" value="Add operation" /></td>
 										</tr>
 									</table>
@@ -129,30 +140,34 @@
 									<table>
 										<tr>
 											<th>Operand</th>
+											<th>=</th>
+											<th>Operand</th>
 											<th>Operator</th>
 											<th>Operand</th>
 											<th>Operator</th>
 											<th>Operand</th>
 										</tr>
 										<tr>
-											<td><select name="ternaryData1">
+											<td><select name="result">
 													<c:forEach var="data" items="${dataStatements}">
 														<option value="${data.getStatementId()}">${data.getDataName()}</option>
 													</c:forEach>
 											</select></td>
-											<td><select name="ternaryOperator1">
-													<option value="?">?</option>
-													<option value=":">:</option>
+											<td>=</td>
+											<td><select name="ternaryData1">
+													<c:forEach var="data" items="${dataStatements}">
+														<c:if test="${data.getDataType() eq 'boolean'}">
+															<option value="${data.getStatementId()}">${data.getDataName()}</option>
+														</c:if>
+													</c:forEach>
 											</select></td>
+											<td>?</td>
 											<td><select name="ternaryData2">
 													<c:forEach var="data" items="${dataStatements}">
 														<option value="${data.getStatementId()}">${data.getDataName()}</option>
 													</c:forEach>
 											</select></td>
-											<td><select name="ternaryOperator2">
-													<option value="?">?</option>
-													<option value=":">:</option>
-											</select></td>
+											<td>:</td>
 											<td><select name="ternaryData3">
 													<c:forEach var="data" items="${dataStatements}">
 														<option value="${data.getStatementId()}">${data.getDataName()}</option>
@@ -185,7 +200,7 @@
 				<tr>
 					<td><input type="submit" name="deleteAction" value="${dataStatement.getStatementId()}" /></td>
 					<td>${dataStatement.getStatementType().getsType()}</td>
-					<td><input type="text" name="detail" value="${dataStatement.getDataType()} ${dataStatement.getDataName()} = ${dataStatement.getDataValue()};" /></td>
+					<td><input type="text" name="detail" disabled="disabled" value="${dataStatement.getDataType()} ${dataStatement.getDataName()} = ${dataStatement.getDataValue()};" /></td>
 				</tr>
 			</form>
 		</c:forEach>
@@ -195,13 +210,13 @@
 				<td><input type="submit" name="deleteAction" value="${operationStatement.getStatementId()}" /></td>
 				<td>${operationStatement.getStatementType().getsType()} - ${operationStatement.getOperationType().getoType()}</td>
 				<c:if test="${operationStatement.getOperationType().getoType() eq 'Unary'}">
-					<td><input type="text" name="detail" value="${operationStatement.getData1().getDataName()}${operationStatement.getOperator1()};" /></td>
+					<td><input type="text" name="detail" disabled="disabled" value="${operationStatement.getData1().getDataName()}${operationStatement.getOperator1()};" /></td>
 				</c:if>
 				<c:if test="${operationStatement.getOperationType().getoType() eq 'Binary'}">
-					<td><input type="text" name="detail" value="${operationStatement.getData1().getDataName()} ${operationStatement.getOperator1()} ${operationStatement.getData2().getDataName()};" /></td>
+					<td><input type="text" name="detail" disabled="disabled" value="${operationStatement.getResult().getDataName()} = ${operationStatement.getData1().getDataName()} ${operationStatement.getOperator1()} ${operationStatement.getData2().getDataName()};" /></td>
 				</c:if>
 				<c:if test="${operationStatement.getOperationType().getoType() eq 'Ternary'}">
-					<td><input type="text" name="detail" value="${operationStatement.getData1().getDataName()} ${operationStatement.getOperator1()} ${operationStatement.getData2().getDataName()} ${operationStatement.getOperator2()} ${operationStatement.getData3().getDataName()};" /></td>
+					<td><input type="text" name="detail" disabled="disabled" value="${operationStatement.getResult().getDataName()} = ${operationStatement.getData1().getDataName()} ${operationStatement.getOperator1()} ${operationStatement.getData2().getDataName()} ${operationStatement.getOperator2()} ${operationStatement.getData3().getDataName()};" /></td>
 				</c:if>
 			</tr>
 			</form>
