@@ -45,7 +45,7 @@
 								<option value="int">Integer</option>
 								<option value="double">Double</option>
 								<option value="boolean">Boolean</option>
-								<option value="string">String</option>
+								<option value="String">String</option>
 								<option value="date">Date</option>
 						</Select></td>
 					</tr>
@@ -95,6 +95,37 @@
 													<option value="++">++</option>
 													<option value="--">--</option>
 											</select></td>
+											<td><input type="submit" value="Add operation" /></td>
+										</tr>
+									</table>
+								</c:when>
+								<c:when test="${param.oType eq 'Substring'}">
+									<table>
+										<tr>
+											<th>Operand</th>
+											<th>=</th>
+											<th>Substring Of</th>
+											<th>Start Index</th>
+											<th>End Index</th>
+										</tr>
+										<tr>
+											<td><select name="substringResult">
+													<c:forEach var="data" items="${dataStatements}">
+														<c:if test="${data.getDataType() eq 'String'}">
+															<option value="${data.getStatementId()}">${data.getDataName()}</option>
+														</c:if>
+													</c:forEach>
+											</select></td>
+											<td>=</td>
+											<td><select name="substringData1">
+													<c:forEach var="data" items="${dataStatements}">
+														<c:if test="${data.getDataType() eq 'String'}">
+															<option value="${data.getStatementId()}">${data.getDataName()}</option>
+														</c:if>
+													</c:forEach>
+												</select></td>
+											<td><input type="text" name="startIndex" /></td>
+											<td><input type="text" name="endIndex" /></td>
 											<td><input type="submit" value="Add operation" /></td>
 										</tr>
 									</table>
@@ -204,19 +235,30 @@
 				</tr>
 			</form>
 		</c:forEach>
-		<c:forEach var="operationStatement" items="${operationStatements}">
-			<form method="POST" action="editoperationstatement.html">
+		<c:forEach var="numberOperation" items="${numberOperations}">
+			<form method="POST" action="editnumberoperation.html">
 			<tr>
-				<td><input type="submit" name="deleteAction" value="${operationStatement.getStatementId()}" /></td>
-				<td>${operationStatement.getStatementType().getsType()} - ${operationStatement.getOperationType().getoType()}</td>
-				<c:if test="${operationStatement.getOperationType().getoType() eq 'Unary'}">
-					<td><input type="text" name="detail" disabled="disabled" value="${operationStatement.getData1().getDataName()}${operationStatement.getOperator1()};" /></td>
+				<td><input type="submit" name="deleteAction" value="${numberOperation.getStatementId()}" /></td>
+				<td>${numberOperation.getStatementType().getsType()} - ${numberOperation.getOperationType().getoType()}</td>
+				<c:if test="${numberOperation.getOperationType().getoType() eq 'Unary'}">
+					<td><input type="text" name="detail" disabled="disabled" value="${numberOperation.getData1().getDataName()}${numberOperation.getOperator1()};" /></td>
 				</c:if>
-				<c:if test="${operationStatement.getOperationType().getoType() eq 'Binary'}">
-					<td><input type="text" name="detail" disabled="disabled" value="${operationStatement.getResult().getDataName()} = ${operationStatement.getData1().getDataName()} ${operationStatement.getOperator1()} ${operationStatement.getData2().getDataName()};" /></td>
+				<c:if test="${numberOperation.getOperationType().getoType() eq 'Binary'}">
+					<td><input type="text" name="detail" disabled="disabled" value="${numberOperation.getResult().getDataName()} = ${numberOperation.getData1().getDataName()} ${numberOperation.getOperator1()} ${numberOperation.getData2().getDataName()};" /></td>
 				</c:if>
-				<c:if test="${operationStatement.getOperationType().getoType() eq 'Ternary'}">
-					<td><input type="text" name="detail" disabled="disabled" value="${operationStatement.getResult().getDataName()} = ${operationStatement.getData1().getDataName()} ${operationStatement.getOperator1()} ${operationStatement.getData2().getDataName()} ${operationStatement.getOperator2()} ${operationStatement.getData3().getDataName()};" /></td>
+				<c:if test="${numberOperation.getOperationType().getoType() eq 'Ternary'}">
+					<td><input type="text" name="detail" disabled="disabled" value="${numberOperation.getResult().getDataName()} = ${numberOperation.getData1().getDataName()} ${numberOperation.getOperator1()} ${numberOperation.getData2().getDataName()} ${numberOperation.getOperator2()} ${numberOperation.getData3().getDataName()};" /></td>
+				</c:if>
+			</tr>
+			</form>
+		</c:forEach>
+		<c:forEach var="stringOperation" items="${stringOperations}">
+			<form method="POST" action="editstringoperation.html">
+			<tr>
+				<td><input type="submit" name="deleteAction" value="${stringOperation.getStatementId()}" /></td>
+				<td>${stringOperation.getStatementType().getsType()} - ${stringOperation.getOperationType().getoType()}</td>
+				<c:if test="${stringOperation.getOperationType().getoType() eq 'Substring'}">
+					<td><input type="text" name="detail" disabled="disabled" value="${stringOperation.getResult().getDataName()} = ${stringOperation.getData1().getDataName()}.${stringOperation.getOperator1()}(${stringOperation.getIndex1()},${stringOperation.getIndex2()});" /></td>
 				</c:if>
 			</tr>
 			</form>

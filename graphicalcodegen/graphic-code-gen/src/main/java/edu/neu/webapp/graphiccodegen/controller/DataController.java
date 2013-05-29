@@ -11,14 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import edu.neu.webapp.graphiccodegen.dao.DataDao;
-import edu.neu.webapp.graphiccodegen.dao.OperationDao;
+import edu.neu.webapp.graphiccodegen.dao.NumberOperationDao;
 import edu.neu.webapp.graphiccodegen.dao.OperationTypeDao;
 import edu.neu.webapp.graphiccodegen.dao.ScriptDao;
 import edu.neu.webapp.graphiccodegen.dao.StatementTypeDao;
+import edu.neu.webapp.graphiccodegen.dao.StringOperationDao;
 import edu.neu.webapp.graphiccodegen.entities.Data;
-import edu.neu.webapp.graphiccodegen.entities.Operation;
+import edu.neu.webapp.graphiccodegen.entities.NumberOperation;
 import edu.neu.webapp.graphiccodegen.entities.OperationType;
 import edu.neu.webapp.graphiccodegen.entities.StatementType;
+import edu.neu.webapp.graphiccodegen.entities.StringOperation;
 
 @Controller
 @SessionAttributes({"sessionScriptName", "sessionStatementType"})
@@ -28,10 +30,13 @@ public class DataController {
     private DataDao dataDao;
 	
 	@Autowired
-    private OperationDao operationDao;
+    private NumberOperationDao numberOperationDao;
 	
 	@Autowired
     private ScriptDao scriptDao;
+	
+	@Autowired
+	private StringOperationDao stringOperationDao;
 	
 	@Autowired
     private StatementTypeDao statementTypeDao;
@@ -107,8 +112,11 @@ public class DataController {
 			List<OperationType> operationTypes = operationTypeDao.getAllOperationTypes();
 	        model.put("operationTypes", operationTypes);
 			
-			List<Operation> operationStatements = operationDao.getAllOperationStatements();
-		 	model.put("operationStatements", operationStatements);
+		 	List<NumberOperation> numberOperations = numberOperationDao.getAllNumberOperationStatements();
+		 	model.put("numberOperations", numberOperations);
+		 	
+		 	List<StringOperation> stringOperations = stringOperationDao.getAllStringOperationStatements();
+			model.put("stringOperations", stringOperations);
 		 
 	 }
 }
