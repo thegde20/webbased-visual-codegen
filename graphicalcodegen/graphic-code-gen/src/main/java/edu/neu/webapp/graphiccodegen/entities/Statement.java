@@ -1,13 +1,16 @@
 package edu.neu.webapp.graphiccodegen.entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Statement implements Serializable{
@@ -26,8 +29,14 @@ public class Statement implements Serializable{
 	
 	@ManyToOne// Foreign Key
     @JoinColumn(name = "script", referencedColumnName = "scriptName")
-	private Script script;
-
+	public Script script;
+	
+	@OneToMany(mappedBy = "trueStatementId", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Collection<Branch> trueStatements;
+	
+	@OneToMany(mappedBy = "falseStatementId", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Collection<Branch> falseStatements;
+	
 	public Statement() {
 		super();
 	}

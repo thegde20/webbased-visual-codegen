@@ -31,10 +31,16 @@ public class StatementDao {
 					em.remove(statement);
 				}
 			}
-
-			// Retrieves all the Statements:
+			
+			public Statement getStatement(int dataStmtId) {
+				Statement statement = em.find(Statement.class, dataStmtId);
+				return statement;
+			}
+			
+			// Retrieves all the Statements belonging to the given Script:
 			public List<Statement> getAllStatements(String scriptName) {
-				TypedQuery<Statement> query = em.createQuery("SELECT s FROM Statement s WHERE s.script.getScriptName()='scriptName' ORDER BY s.statementId", Statement.class);
+				TypedQuery<Statement> query = em.createQuery("SELECT s FROM Statement s WHERE s.script.scriptName=:stmtScript ORDER BY s.statementId", Statement.class)
+						.setParameter("stmtScript", scriptName);
 				return query.getResultList();
 			}
 }

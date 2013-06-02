@@ -59,6 +59,41 @@
 				</table>
 			</form>
 		</c:when>
+		<c:when test="${scriptstmtType eq 'Branch'}">
+			<form name="variableform" method="POST" action="branchWithValues.html">
+				<table>
+					<tr>
+						<th>Operand</th>
+						<th>?</th>
+						<th>if True</th>
+						<th>:</th>
+						<th>Else</th>
+					</tr>
+					<tr>
+						<td><select name="branchingVar">
+								<c:forEach var="data" items="${dataStatements}">
+									<c:if test="${data.getDataType() eq 'boolean'}">
+										<option value="${data.getStatementId()}">${data.getDataName()}</option>
+									</c:if>
+								</c:forEach>
+						</select></td>
+						<td>?</td>
+						<td><select name="trueStatement">
+								<c:forEach var="statement" items="${statements}">
+									<option value="${statement.getStatementId()}">${statement.getStatementId()}</option>
+								</c:forEach>
+						</select></td>
+						<td>:</td>
+						<td><select name="falseStatement">
+								<c:forEach var="statement" items="${statements}">
+									<option value="${statement.getStatementId()}">${statement.getStatementId()}</option>
+								</c:forEach>
+						</select></td>
+						<td><input type="submit" value="Add operation" /></td>
+					</tr>
+				</table>
+			</form>
+		</c:when>
 		<c:when test="${scriptstmtType eq 'Operational'}">
 			<form name="operationtypeform" method="POST"
 				action="renderoperation.html">
@@ -130,6 +165,41 @@
 										</tr>
 									</table>
 								</c:when>
+								<c:when test="${param.oType eq 'Concat'}">
+									<table>
+										<tr>
+											<th>Operand</th>
+											<th>=</th>
+											<th>Operand</th>
+											<th>Concatenate with</th>										
+										</tr>
+										<tr>
+											<td><select name="concatResult">
+													<c:forEach var="data" items="${dataStatements}">
+														<c:if test="${data.getDataType() eq 'String'}">
+															<option value="${data.getStatementId()}">${data.getDataName()}</option>
+														</c:if>
+													</c:forEach>
+											</select></td>
+											<td>=</td>
+											<td><select name="concatData1">
+													<c:forEach var="data" items="${dataStatements}">
+														<c:if test="${data.getDataType() eq 'String'}">
+															<option value="${data.getStatementId()}">${data.getDataName()}</option>
+														</c:if>
+													</c:forEach>
+												</select></td>
+											<td><select name="concatData2">
+													<c:forEach var="data" items="${dataStatements}">
+														<c:if test="${data.getDataType() eq 'String'}">
+															<option value="${data.getStatementId()}">${data.getDataName()}</option>
+														</c:if>
+													</c:forEach>
+												</select></td>
+											<td><input type="submit" value="Add operation" /></td>
+										</tr>
+									</table>
+								</c:when>
 								<c:when test="${param.oType eq 'Binary'}">
 									<table>
 										<tr>
@@ -151,6 +221,9 @@
 													<option value="*">*</option>
 													<option value="/">/</option>
 													<option value="^">^</option>
+													<option value=">">&gt;</option>
+													<option value="<">&lt;</option>
+													<option value="==">==</option>
 											</select></td>
 											<td><select name="binaryData2">
 													<c:forEach var="data" items="${dataStatements}">
@@ -167,7 +240,7 @@
 										</tr>
 									</table>
 								</c:when>
-								<c:when test="${param.oType eq 'Ternary'}">
+								<c:when test="${param.oType eq 'Decision'}">
 									<table>
 										<tr>
 											<th>Operand</th>
@@ -185,7 +258,7 @@
 													</c:forEach>
 											</select></td>
 											<td>=</td>
-											<td><select name="ternaryData1">
+											<td><select name="decisionData1">
 													<c:forEach var="data" items="${dataStatements}">
 														<c:if test="${data.getDataType() eq 'boolean'}">
 															<option value="${data.getStatementId()}">${data.getDataName()}</option>
@@ -193,13 +266,13 @@
 													</c:forEach>
 											</select></td>
 											<td>?</td>
-											<td><select name="ternaryData2">
+											<td><select name="decisionData2">
 													<c:forEach var="data" items="${dataStatements}">
 														<option value="${data.getStatementId()}">${data.getDataName()}</option>
 													</c:forEach>
 											</select></td>
 											<td>:</td>
-											<td><select name="ternaryData3">
+											<td><select name="decisionData3">
 													<c:forEach var="data" items="${dataStatements}">
 														<option value="${data.getStatementId()}">${data.getDataName()}</option>
 													</c:forEach>
@@ -225,13 +298,15 @@
 			<th>Delete Statement</th>
 			<th>Operation Type</th>
 			<th>Statement</th>
+			<th>Update</th>
 		</tr>
 		<c:forEach var="dataStatement" items="${dataStatements}">
 			<form method="POST" action="editdatastatement.html">
 				<tr>
 					<td><input type="submit" name="deleteAction" value="${dataStatement.getStatementId()}" /></td>
 					<td>${dataStatement.getStatementType().getsType()}</td>
-					<td><input type="text" name="detail" disabled="disabled" value="${dataStatement.getDataType()} ${dataStatement.getDataName()} = ${dataStatement.getDataValue()};" /></td>
+					<td><input type="text" size="50" name="detail" disabled="disabled" value="${dataStatement.getDataType()} ${dataStatement.getDataName()} = ${dataStatement.getDataValue()};" /></td>
+					<td><input type="submit" name="updateAction" value="${dataStatement.getStatementId()}" /></td>
 				</tr>
 			</form>
 		</c:forEach>
@@ -241,14 +316,15 @@
 				<td><input type="submit" name="deleteAction" value="${numberOperation.getStatementId()}" /></td>
 				<td>${numberOperation.getStatementType().getsType()} - ${numberOperation.getOperationType().getoType()}</td>
 				<c:if test="${numberOperation.getOperationType().getoType() eq 'Unary'}">
-					<td><input type="text" name="detail" disabled="disabled" value="${numberOperation.getData1().getDataName()}${numberOperation.getOperator1()};" /></td>
+					<td><input type="text" size="50" name="detail" disabled="disabled" value="${numberOperation.getData1().getDataName()}${numberOperation.getOperator1()};" /></td>
 				</c:if>
 				<c:if test="${numberOperation.getOperationType().getoType() eq 'Binary'}">
-					<td><input type="text" name="detail" disabled="disabled" value="${numberOperation.getResult().getDataName()} = ${numberOperation.getData1().getDataName()} ${numberOperation.getOperator1()} ${numberOperation.getData2().getDataName()};" /></td>
+					<td><input type="text" size="50" name="detail" disabled="disabled" value="${numberOperation.getResult().getDataName()} = ${numberOperation.getData1().getDataName()} ${numberOperation.getOperator1()} ${numberOperation.getData2().getDataName()};" /></td>
 				</c:if>
-				<c:if test="${numberOperation.getOperationType().getoType() eq 'Ternary'}">
-					<td><input type="text" name="detail" disabled="disabled" value="${numberOperation.getResult().getDataName()} = ${numberOperation.getData1().getDataName()} ${numberOperation.getOperator1()} ${numberOperation.getData2().getDataName()} ${numberOperation.getOperator2()} ${numberOperation.getData3().getDataName()};" /></td>
+				<c:if test="${numberOperation.getOperationType().getoType() eq 'Decision'}">
+					<td><input type="text" size="50" name="detail" disabled="disabled" value="${numberOperation.getResult().getDataName()} = ${numberOperation.getData1().getDataName()} ${numberOperation.getOperator1()} ${numberOperation.getData2().getDataName()} ${numberOperation.getOperator2()} ${numberOperation.getData3().getDataName()};" /></td>
 				</c:if>
+				<td><input type="submit" name="updateAction" value="${numberOperation.getStatementId()}" /></td>
 			</tr>
 			</form>
 		</c:forEach>
@@ -260,7 +336,21 @@
 				<c:if test="${stringOperation.getOperationType().getoType() eq 'Substring'}">
 					<td><input type="text" name="detail" disabled="disabled" value="${stringOperation.getResult().getDataName()} = ${stringOperation.getData1().getDataName()}.${stringOperation.getOperator1()}(${stringOperation.getIndex1()},${stringOperation.getIndex2()});" /></td>
 				</c:if>
+				<c:if test="${stringOperation.getOperationType().getoType() eq 'Concat'}">
+					<td><input type="text" size="50" name="detail" disabled="disabled" value="${stringOperation.getResult().getDataName()} = ${stringOperation.getData1().getDataName()}.${stringOperation.getOperator1()}(${stringOperation.getData2().getDataName()});" /></td>
+				</c:if>
+				<td><input type="submit" name="updateAction" value="${stringOperation.getStatementId()}" /></td>
 			</tr>
+			</form>
+		</c:forEach>
+				<c:forEach var="branchStatement" items="${branchStatements}">
+			<form method="POST" action="editbranchstatement.html">
+				<tr>
+					<td><input type="submit" name="deleteAction" value="${branchStatement.getStatementId()}" /></td>
+					<td>${branchStatement.getStatementType().getsType()}</td>
+					<td><input type="text" size="50" name="detail" disabled="disabled" value="if(${branchStatement.getBranchingData().getDataName()}){${branchStatement.getTrueStatement()};} else{${branchStatement.getFalseStatement()};}" /></td>
+					<td><input type="submit" name="updateAction" value="${branchStatement.getStatementId()}" /></td>
+				</tr>
 			</form>
 		</c:forEach>
 	</table>

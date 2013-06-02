@@ -28,8 +28,8 @@ import edu.neu.webapp.graphiccodegen.entities.StringOperation;
 
 @Controller
 @SessionAttributes({"sessionScriptName", "sessionStatementType"})
-public class DataController {
-
+public class BranchController {
+	
 	@Autowired
     private DataDao dataDao;
 	
@@ -54,39 +54,29 @@ public class DataController {
 	@Autowired
 	private BranchDao branchDao;
 	
-	
-	 @RequestMapping(value="/statementWithValues")
-	    public String renderChosenStatement(ModelMap model, HttpServletRequest request) {
-		 	
-		 	model.put("sessionStatementType", request.getParameter("scriptstmtType"));
-		 	
-		 	renderPageValues(model);
-	        
-	        return "scriptstatementpage";
-	    }
-	
-	 @RequestMapping(value="/dataWithValues")
-	    public String installData(ModelMap model, HttpServletRequest request) {
+	 @RequestMapping(value="/branchWithValues")
+	    public String installBranch(ModelMap model, HttpServletRequest request) {
 	    	
 	        String scriptName = String.valueOf(model.get("sessionScriptName"));
 	        String scriptStmtType = String.valueOf(model.get("sessionStatementType"));
-	        String dataName = request.getParameter("varName");
-	        String dataType = request.getParameter("varType");
-	        String dataValue = request.getParameter("varValue");
+	        int branchingVarId = Integer.parseInt(request.getParameter("branchingVar"));
+	        int trueStatementId = Integer.parseInt(request.getParameter("trueStatement"));
+	        int falseStatementId = Integer.parseInt(request.getParameter("falseStatement"));
 
-	        dataDao.persist(new Data(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), dataName, dataValue, dataType));
+	        branchDao.persist(new Branch(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName),
+	        		dataDao.getData(branchingVarId), statementDao.getStatement(trueStatementId), statementDao.getStatement(falseStatementId)));
 	        
 	        renderPageValues(model);
 	        return "scriptstatementpage";
 	    }
 	 
-	@RequestMapping(value = "/editdatastatement")
+	@RequestMapping(value = "/editbranchstatement")
 	public String editDataStatement(ModelMap model, HttpServletRequest request) {
 		
 		if (request.getParameter("deleteAction") != null) {
 
-			int oldDataStatement = Integer.valueOf(request.getParameter("deleteAction"));
-			dataDao.deleteDataStatementById(oldDataStatement);
+			int oldBranchStatement = Integer.valueOf(request.getParameter("deleteAction"));
+			branchDao.deleteBranchStatementById(oldBranchStatement);
 			
 			renderPageValues(model);
 			
@@ -97,14 +87,7 @@ public class DataController {
 			return "scriptstatementpage";
 		}
 	}
-	 
-	 @RequestMapping(value="/scriptstatementpage")
-	public String renderMainStatements(ModelMap model,HttpServletRequest request) {
 
-		renderPageValues(model);
-		return "scriptstatementpage";
-	}
-	 
 	 public void renderPageValues(ModelMap model){
 		 
 			List<StatementType> stmtTypes = statementTypeDao.getAllStatementTypes();
@@ -114,9 +97,6 @@ public class DataController {
 			 
 			List<Data> dataStatements = dataDao.getAllDataStatements(scriptName);
 			model.put("dataStatements", dataStatements);
-			
-			List<Branch> branchStatements = branchDao.getAllBranchStatements(scriptName);
-			model.put("branchStatements", branchStatements);
 			
 			List<OperationType> operationTypes = operationTypeDao.getAllOperationTypes();
 	        model.put("operationTypes", operationTypes);
@@ -130,7 +110,9 @@ public class DataController {
 			List<Statement> statements = statementDao.getAllStatements(scriptName);
 			model.put("statements", statements);
 			
+			List<Branch> branchStatements = branchDao.getAllBranchStatements(scriptName);
+			model.put("branchStatements", branchStatements);
 			
-		 
 	 }
+
 }

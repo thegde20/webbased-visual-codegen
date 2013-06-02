@@ -10,15 +10,19 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import edu.neu.webapp.graphiccodegen.dao.BranchDao;
 import edu.neu.webapp.graphiccodegen.dao.DataDao;
 import edu.neu.webapp.graphiccodegen.dao.NumberOperationDao;
 import edu.neu.webapp.graphiccodegen.dao.OperationTypeDao;
 import edu.neu.webapp.graphiccodegen.dao.ScriptDao;
+import edu.neu.webapp.graphiccodegen.dao.StatementDao;
 import edu.neu.webapp.graphiccodegen.dao.StatementTypeDao;
 import edu.neu.webapp.graphiccodegen.dao.StringOperationDao;
+import edu.neu.webapp.graphiccodegen.entities.Branch;
 import edu.neu.webapp.graphiccodegen.entities.Data;
 import edu.neu.webapp.graphiccodegen.entities.NumberOperation;
 import edu.neu.webapp.graphiccodegen.entities.OperationType;
+import edu.neu.webapp.graphiccodegen.entities.Statement;
 import edu.neu.webapp.graphiccodegen.entities.StatementType;
 import edu.neu.webapp.graphiccodegen.entities.StringOperation;
 
@@ -44,9 +48,15 @@ public class OperationController {
 	@Autowired
     private OperationTypeDao operationTypeDao;
 	
+	@Autowired
+	private StatementDao statementDao;
+	
+	@Autowired
+	private BranchDao branchDao;
+	
 	 @RequestMapping(value="/operationWithValues")
-	    public String installData(ModelMap model, HttpServletRequest request) {
-	    	
+	    public String installOperation(ModelMap model, HttpServletRequest request) {
+		 
 	        String scriptName = String.valueOf(model.get("sessionScriptName"));
 	        String scriptStmtType = String.valueOf(model.get("sessionStatementType"));
 	        String operationType = String.valueOf(model.get("sessionOperationType"));
@@ -71,12 +81,12 @@ public class OperationController {
 					operationTypeDao.getOperationType(operationType), dataDao.getData(dataStmtId1), dataDao.getData(dataStmtId2), dataDao.getData(resultId), 
 					operator, dataDao.getData(0), null));
 			
-		}else  if(operationType.equalsIgnoreCase("Ternary")){
+		}else  if(operationType.equalsIgnoreCase("Decision")){
 			
 			int resultId = Integer.parseInt(request.getParameter("result"));
-			int dataStmtId1 = Integer.parseInt(request.getParameter("ternaryData1"));
-			int dataStmtId2 = Integer.parseInt(request.getParameter("ternaryData2"));
-			int dataStmtId3 = Integer.parseInt(request.getParameter("ternaryData3"));
+			int dataStmtId1 = Integer.parseInt(request.getParameter("decisionData1"));
+			int dataStmtId2 = Integer.parseInt(request.getParameter("decisionData2"));
+			int dataStmtId3 = Integer.parseInt(request.getParameter("decisionData3"));
 			String operator1 = "?";
 			String operator2 = ":";
 			
@@ -88,13 +98,23 @@ public class OperationController {
 			
 			int resultId = Integer.parseInt(request.getParameter("substringResult"));
 			int dataStmtId1 = Integer.parseInt(request.getParameter("substringData1"));
-			String operator1 = "substring";
+			String operator = "substring";
 			int startIndex = Integer.parseInt(request.getParameter("startIndex"));
 			int endIndex = Integer.parseInt(request.getParameter("endIndex"));
 			
 			stringOperationDao.persist(new StringOperation(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), 
 					operationTypeDao.getOperationType(operationType), dataDao.getData(dataStmtId1), dataDao.getData(0), dataDao.getData(resultId), 
-					operator1, startIndex, endIndex));
+					operator, startIndex, endIndex));
+		}else if(operationType.equalsIgnoreCase("Concat")){
+			
+			int resultId = Integer.parseInt(request.getParameter("concatResult"));
+			int dataStmtId1 = Integer.parseInt(request.getParameter("concatData1"));
+			int dataStmtId2 = Integer.parseInt(request.getParameter("concatData2"));
+			String operator = "concat";
+			
+			stringOperationDao.persist(new StringOperation(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), 
+					operationTypeDao.getOperationType(operationType), dataDao.getData(dataStmtId1), dataDao.getData(dataStmtId2), dataDao.getData(resultId), 
+					operator, 0, 0));
 		}
 
 		renderPageValues(model);
@@ -149,7 +169,9 @@ public class OperationController {
 
 	 public void renderPageValues(ModelMap model){
 		 
-		 	List<NumberOperation> numberOperations = numberOperationDao.getAllNumberOperationStatements();
+			String scriptName = String.valueOf(model.get("sessionScriptName"));
+			
+		 	List<NumberOperation> numberOperations = numberOperationDao.getAllNumberOperationStatements(scriptName);
 		 	model.put("numberOperations", numberOperations);
 		 	
 			List<OperationType> operationTypes = operationTypeDao.getAllOperationTypes();
@@ -158,11 +180,17 @@ public class OperationController {
 			List<StatementType> stmtTypes = statementTypeDao.getAllStatementTypes();
 			model.put("statementTypes", stmtTypes);
 			
-			List<StringOperation> stringOperations = stringOperationDao.getAllStringOperationStatements();
+			List<StringOperation> stringOperations = stringOperationDao.getAllStringOperationStatements(scriptName);
 			model.put("stringOperations", stringOperations);
 
-			List<Data> dataStatements = dataDao.getAllDataStatements();
+			List<Data> dataStatements = dataDao.getAllDataStatements(scriptName);
 			model.put("dataStatements", dataStatements);
+		
+			List<Branch> branchStatements = branchDao.getAllBranchStatements(scriptName);
+			model.put("branchStatements", branchStatements);
+			
+			List<Statement> statements = statementDao.getAllStatements(scriptName);
+			model.put("statements", statements);
 	 }
 
 }

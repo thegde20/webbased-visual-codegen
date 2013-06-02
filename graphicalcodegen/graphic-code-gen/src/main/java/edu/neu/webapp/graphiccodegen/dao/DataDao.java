@@ -38,16 +38,10 @@ public class DataDao {
 					return data;
 				}
 				
-				// Retrieves all the Statements:
-				public List<Data> getAllDataStatements() {
-					
-					TypedQuery<Data> query = em.createQuery("SELECT d FROM Data d ORDER BY d.statementId", Data.class);
+				public List<Data> getAllDataStatements(String scriptName) {
+					TypedQuery<Data> query = em.createQuery("SELECT d FROM Data d WHERE d.script.scriptName=:abc ORDER BY d.statementId", Data.class)
+							.setParameter("abc", scriptName);
 					return query.getResultList();
 				}
-
-			/*	public List<Data> getAllDataStatements(String scriptName) {
-					TypedQuery<Data> query = em.createQuery("SELECT d FROM Data d WHERE d.script.scriptName='scriptName' ORDER BY d.statementId", Data.class);
-					return query.getResultList();
-				}*/
 				
 }
