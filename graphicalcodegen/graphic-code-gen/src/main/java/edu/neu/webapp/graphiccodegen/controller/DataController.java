@@ -1,5 +1,9 @@
 package edu.neu.webapp.graphiccodegen.controller;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -105,6 +109,46 @@ public class DataController {
 		return "scriptstatementpage";
 	}
 	 
+	 
+	 @RequestMapping(value="/displayVariableValues")
+	 public String displayDataValues(){
+		 
+		 try{
+	    		String data = "<%@taglib prefix=&quot;form&quot; uri=&quot;http://www.springframework.org/tags/form&quot;%><!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;><html><head><meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=ISO-8859-1&quot;></head><body><c:forEach var=&quot;dataStatement&quot; items=&quot;${sessionVariableObjects}&quot;><tableborder=&quot;&quot;><tr><th>Variable</th><th>Value</th></tr><tr><td></td>${dataStatement.getDataName()}<td>${dataStatement.getDataValue()}</td></tr></table></c:forEach></body></html>";
+	 
+	    		File file = new File("C:/Users/TejaswiniHegde/Documents/GitHub/webbased-visual-codegen/graphicalcodegen/graphic-code-gen/src/main/webapp/WEB-INF/displayFinalValues.jsp");
+	    		//File file = new File("displayFinalValues.jsp");
+	    		//if file doesnt exists, then create it
+	    		if(!file.exists()){
+	    			file.createNewFile();
+	    			System.out.println("File Created");
+	    		}
+	 
+	    		//true = append file
+	    		FileWriter fileWritter = new FileWriter(file.getAbsoluteFile());
+	    			//FileWriter fileWritter = new FileWriter(file.getName(),true);
+	    	        BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
+	    	        bufferWritter.write(data);
+	    	        bufferWritter.close();
+	 
+		        System.out.println("File Written to "+file.getAbsolutePath());
+		        
+		      
+		        
+	 
+	    	}catch(IOException e){
+	    		e.printStackTrace();
+	    	}
+	 return "displayFinalValues";
+	 }
+	 
+	 
+	 @RequestMapping(value="/displayFinalValues")
+	 public String displayFinalValues(){
+		 
+		 return "displayFinalValues";
+	 }
+	 
 	 public void renderPageValues(ModelMap model){
 		 
 			List<StatementType> stmtTypes = statementTypeDao.getAllStatementTypes();
@@ -113,7 +157,7 @@ public class DataController {
 			String scriptName = String.valueOf(model.get("sessionScriptName"));
 			 
 			List<Data> dataStatements = dataDao.getAllDataStatements(scriptName);
-			model.put("dataStatements", dataStatements);
+			model.put("sessionVariableObjects", dataStatements);
 			
 			List<Branch> branchStatements = branchDao.getAllBranchStatements(scriptName);
 			model.put("branchStatements", branchStatements);

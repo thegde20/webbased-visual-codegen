@@ -32,6 +32,19 @@ public class DataDao {
 					}
 				}
 				
+				 // Updates the Data object
+			    @Transactional
+			    public void updateDataById(int dataStatementId, int operand1, int operand2, String operator) {
+			    	
+			    	Data data = getData(dataStatementId);
+			    	    	
+			        if (data != null) {
+			        	
+			        	data.setDataValue(String.valueOf((Integer.parseInt(getData(operand1).getDataValue())+Integer.parseInt(getData(operand2).getDataValue()))));
+			        } 
+			    }
+			    
+				
 				// Returns a Data object 
 				public Data getData(int dataStmtId) {
 					Data data = em.find(Data.class, dataStmtId);

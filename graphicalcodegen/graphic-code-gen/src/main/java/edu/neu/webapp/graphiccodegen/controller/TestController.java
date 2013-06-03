@@ -18,12 +18,7 @@ import edu.neu.webapp.graphiccodegen.dao.ScriptDao;
 import edu.neu.webapp.graphiccodegen.dao.StatementDao;
 import edu.neu.webapp.graphiccodegen.dao.StatementTypeDao;
 import edu.neu.webapp.graphiccodegen.dao.StringOperationDao;
-import edu.neu.webapp.graphiccodegen.entities.Branch;
 import edu.neu.webapp.graphiccodegen.entities.Data;
-import edu.neu.webapp.graphiccodegen.entities.NumberOperation;
-import edu.neu.webapp.graphiccodegen.entities.Statement;
-import edu.neu.webapp.graphiccodegen.entities.StatementType;
-import edu.neu.webapp.graphiccodegen.entities.StringOperation;
 
 
 @Controller
@@ -65,46 +60,23 @@ public class TestController {
         Data dataObject1 = new Data(statementTypeDao.getStatementType("Declarative"), scriptDao.getScript("script1"), var1, value1, type1);
         Data dataObject2 = new Data(statementTypeDao.getStatementType("Declarative"), scriptDao.getScript("script1"), var2, value2, type2);
         
-        dataDao.persist(dataObject1);
-        dataDao.persist(dataObject2);
+		List<Data> dataArray = new ArrayList<Data>();
         
-        List<Data> dataArray = new ArrayList<Data>();
         dataArray.add(dataObject1);
         dataArray.add(dataObject2);
         
-  	  	model.put("sessionScriptName","script1");
-        
+        // Put the input variables array into a session object
         model.put("sessionVariableObjects", dataArray);
         
-        List<StatementType> stmtTypes = statementTypeDao.getAllStatementTypes();
-        model.put("statementTypes", stmtTypes);
-        
-        String scriptName = String.valueOf(model.get("sessionScriptName"));
-        
-        List<Data> dataStatements = dataDao.getAllDataStatements(scriptName);
-	    model.put("dataStatements", dataStatements);
-	    
-	 	List<NumberOperation> numberOperations = numberOperationDao.getAllNumberOperationStatements(scriptName);
-	 	model.put("numberOperations", numberOperations);
-	 	
-		List<Statement> statements = statementDao.getAllStatements(scriptName);
-		model.put("statements", statements);
-		
-		List<Branch> branchStatements = branchDao.getAllBranchStatements(scriptName);
-		model.put("branchStatements", branchStatements);
-	 	
-	 	List<StringOperation> stringOperations = stringOperationDao.getAllStringOperationStatements(scriptName);
-		model.put("stringOperations", stringOperations);
+        //Persisting the new data to the Data table in database
+        dataDao.persist(dataObject1);
+        dataDao.persist(dataObject2);
         
         return "mainmenu";
     }
 
 	@RequestMapping(value = "/testpage")
-	public String testMenu(ModelMap model, HttpServletRequest request) {
-
-		List<Data> dataStatements = dataDao.getAllDataStatements("script1");
-		model.put("sessionVariableObjects", dataStatements);
-
+	public String testMenu() {
 		return "testpage";
 	}
 }

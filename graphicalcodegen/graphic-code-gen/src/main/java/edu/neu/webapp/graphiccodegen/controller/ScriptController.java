@@ -28,7 +28,7 @@ import edu.neu.webapp.graphiccodegen.entities.StringOperation;
 
 
 @Controller
-@SessionAttributes("sessionScriptName")
+@SessionAttributes({"sessionScriptName", "sessionVariableObjects"})
 public class ScriptController {
 	
 	@Autowired
@@ -87,7 +87,7 @@ public class ScriptController {
 			String scriptName = String.valueOf(model.get("sessionScriptName"));
 			 
 			List<Data> dataStatements = dataDao.getAllDataStatements(scriptName);
-		    model.put("dataStatements", dataStatements);
+		    model.put("sessionVariableObjects", dataStatements);
 		    
 		 	List<NumberOperation> numberOperations = numberOperationDao.getAllNumberOperationStatements(scriptName);
 		 	model.put("numberOperations", numberOperations);
