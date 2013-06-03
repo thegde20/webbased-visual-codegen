@@ -1,6 +1,7 @@
 package edu.neu.webapp.graphiccodegen.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.CascadeType;
@@ -45,6 +46,8 @@ public class Statement implements Serializable{
 		super();
 		this.statementType = statementType;
 		this.script = script;
+		this.trueStatements = new ArrayList<Branch>() ;
+		this.falseStatements = new ArrayList<Branch>();
 	}
 
 	public int getStatementId() {
@@ -71,10 +74,21 @@ public class Statement implements Serializable{
 		this.script = script;
 	}
 
-	@Override
-	public String toString() {
-		return "Statement [statementId=" + statementId + ", statementType="
-				+ statementType + ", script=" + script + "]";
-	}	
+	public Collection<Branch> getTrueStatements() {
+		return trueStatements;
+	}
+
+	public void setTrueStatements(Collection<Branch> trueStatements) {
+		this.trueStatements = trueStatements;
+	}
+
+	public Collection<Branch> getFalseStatements() {
+		return falseStatements;
+	}
+
+	public void setFalseStatements(Collection<Branch> falseStatements) {
+		this.falseStatements = falseStatements;
+	}
+
 	
 }

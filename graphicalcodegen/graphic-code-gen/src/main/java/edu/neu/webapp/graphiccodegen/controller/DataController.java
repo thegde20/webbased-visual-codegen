@@ -27,7 +27,7 @@ import edu.neu.webapp.graphiccodegen.entities.StatementType;
 import edu.neu.webapp.graphiccodegen.entities.StringOperation;
 
 @Controller
-@SessionAttributes({"sessionScriptName", "sessionStatementType"})
+@SessionAttributes({"sessionScriptName", "sessionStatementType", "sessionVariableObjects"})
 public class DataController {
 
 	@Autowired
@@ -100,7 +100,7 @@ public class DataController {
 	 
 	 @RequestMapping(value="/scriptstatementpage")
 	public String renderMainStatements(ModelMap model,HttpServletRequest request) {
-
+		 
 		renderPageValues(model);
 		return "scriptstatementpage";
 	}
@@ -129,8 +129,6 @@ public class DataController {
 			
 			List<Statement> statements = statementDao.getAllStatements(scriptName);
 			model.put("statements", statements);
-			
-			
-		 
+					
 	 }
 }

@@ -76,6 +76,11 @@
 										<option value="${data.getStatementId()}">${data.getDataName()}</option>
 									</c:if>
 								</c:forEach>
+								<c:forEach var="varObject" items="${sessionVariableObjects}">
+									<c:if test="${varObject.getDataType() eq 'boolean'}">
+										<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
+									</c:if>
+								</c:forEach>
 						</select></td>
 						<td>?</td>
 						<td><select name="trueStatement">
@@ -120,9 +125,9 @@
 										</tr>
 										<tr>
 											<td><select name="unaryData1">
-													<c:forEach var="data" items="${dataStatements}">
-														<c:if test="${data.getDataType() eq 'double' or data.getDataType() eq 'int'}">
-															<option value="${data.getStatementId()}">${data.getDataName()}</option>
+													<c:forEach var="varObject" items="${sessionVariableObjects}">
+														<c:if test="${varObject.getDataType() eq 'double' or varObject.getDataType() eq 'int'}">
+															<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
 														</c:if>
 													</c:forEach>
 											</select></td>
@@ -348,7 +353,7 @@
 				<tr>
 					<td><input type="submit" name="deleteAction" value="${branchStatement.getStatementId()}" /></td>
 					<td>${branchStatement.getStatementType().getsType()}</td>
-					<td><input type="text" size="50" name="detail" disabled="disabled" value="if(${branchStatement.getBranchingData().getDataName()}){${branchStatement.getTrueStatement()};} else{${branchStatement.getFalseStatement()};}" /></td>
+					<td><input type="text" size="50" name="detail" disabled="disabled" value="if(${branchStatement.getBranchingData().getDataName()}){${branchStatement.getTrueStatementId().getStatementId()};} else{${branchStatement.getFalseStatementId().getStatementId()};}" /></td>
 					<td><input type="submit" name="updateAction" value="${branchStatement.getStatementId()}" /></td>
 				</tr>
 			</form>
