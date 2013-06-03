@@ -114,7 +114,7 @@ public class DataController {
 	 public String displayDataValues(){
 		 
 		 try{
-	    		String data = "<%@taglib prefix=&quot;form&quot; uri=&quot;http://www.springframework.org/tags/form&quot;%><!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;><html><head><meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=ISO-8859-1&quot;></head><body><c:forEach var=&quot;dataStatement&quot; items=&quot;${sessionVariableObjects}&quot;><tableborder=&quot;&quot;><tr><th>Variable</th><th>Value</th></tr><tr><td></td>${dataStatement.getDataName()}<td>${dataStatement.getDataValue()}</td></tr></table></c:forEach></body></html>";
+	    		String data = "<%@taglib prefix=\"form\" uri=\"http://www.springframework.org/tags/form\"%>\n<%@ taglib prefix=\"c\" uri=\"http://java.sun.com/jsp/jstl/core\"%>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n<html>\n<head>\n\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">\n\t<title>Final Variable Values</title>\n</head>\n<body>\n\t<table border=\"\">\n\t\t<tr>\n\t\t\t<th>Variable</th>\n\t\t\t<th>Value</th>\n\t\t\t<c:forEach var=\"dataStatement\" items=\"${sessionVariableObjects}\">\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>${dataStatement.getDataName()}</td>\n\t\t\t<td>${dataStatement.getDataValue()}</td>\n\t\t</tr>\n\t\t\t</c:forEach>\n\t</table>\n</body>\n</html>";
 	 
 	    		File file = new File("C:/Users/TejaswiniHegde/Documents/GitHub/webbased-visual-codegen/graphicalcodegen/graphic-code-gen/src/main/webapp/WEB-INF/displayFinalValues.jsp");
 	    		//File file = new File("displayFinalValues.jsp");
@@ -129,17 +129,12 @@ public class DataController {
 	    			//FileWriter fileWritter = new FileWriter(file.getName(),true);
 	    	        BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
 	    	        bufferWritter.write(data);
-	    	        bufferWritter.close();
-	 
-		        System.out.println("File Written to "+file.getAbsolutePath());
-		        
-		      
-		        
+	    	        bufferWritter.close();		        
 	 
 	    	}catch(IOException e){
 	    		e.printStackTrace();
 	    	}
-	 return "displayFinalValues";
+		 return "displayFinalValues";
 	 }
 	 
 	 

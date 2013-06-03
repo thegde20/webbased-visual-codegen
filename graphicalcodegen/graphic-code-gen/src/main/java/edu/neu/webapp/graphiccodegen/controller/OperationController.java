@@ -57,11 +57,9 @@ public class OperationController {
 	 @RequestMapping(value="/operationWithValues")
 	    public String installOperation(ModelMap model, HttpServletRequest request) {
 		 
-		 System.out.println("Inside operation Ctrller");
 	        String scriptName = String.valueOf(model.get("sessionScriptName"));
 	        String scriptStmtType = String.valueOf(model.get("sessionStatementType"));
 	        String operationType = String.valueOf(model.get("sessionOperationType"));
-	        System.out.println("operationType "+operationType);
 	        
 		if(operationType.equalsIgnoreCase("Unary")) {
 
@@ -74,15 +72,12 @@ public class OperationController {
 			
 		}else if(operationType.equalsIgnoreCase("Binary")){
 			
-			System.out.println("Inside Binary");
 			int resultId = Integer.parseInt(request.getParameter("result"));
 			int dataStmtId1 = Integer.parseInt(request.getParameter("binaryData1"));
 			int dataStmtId2 = Integer.parseInt(request.getParameter("binaryData2"));
 			String operator = request.getParameter("binaryOperator");
 			
 			dataDao.updateDataById(resultId, dataStmtId1, dataStmtId2, operator);
-			
-			System.out.println("Back");
 			
 			numberOperationDao.persist(new NumberOperation(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), 
 					operationTypeDao.getOperationType(operationType), dataDao.getData(dataStmtId1), dataDao.getData(dataStmtId2), dataDao.getData(resultId), 
