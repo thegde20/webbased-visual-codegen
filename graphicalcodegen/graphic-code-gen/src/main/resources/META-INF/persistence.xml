@@ -6,7 +6,12 @@
 
 	<persistence-unit name="GraphicCodeGenApp" transaction-type="RESOURCE_LOCAL">
 		<provider>com.objectdb.jpa.Provider</provider>
-		<class>edu.neu.webapp.graphiccodegen.entities.Data</class>
+		
+		<class>edu.neu.webapp.graphiccodegen.model.Application</class>
+		<class>edu.neu.webapp.graphiccodegen.model.Developer</class>
+		<class>edu.neu.webapp.graphiccodegen.model.Flow</class>
+		<class>edu.neu.webapp.graphiccodegen.model.Node</class>
+		<class>edu.neu.webapp.graphiccodegen.model.Event</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="$objectdb/db/GraphicCodeGen.odb" />
 			<property name="javax.persistence.jdbc.user" value="admin" />
