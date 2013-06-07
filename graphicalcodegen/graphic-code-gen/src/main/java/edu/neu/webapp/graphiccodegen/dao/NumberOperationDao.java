@@ -38,10 +38,10 @@ public class NumberOperationDao {
 				return numberOperation;
 			}
 			
-			// Retrieves all the Statements:
-			public List<NumberOperation> getAllNumberOperationStatements() {
-				
-				TypedQuery<NumberOperation> query = em.createQuery("SELECT no FROM NumberOperation no ORDER BY no.statementId", NumberOperation.class);
+			// Retrieves all the Statements belonging to the given script:
+			public List<NumberOperation> getAllNumberOperationStatements(String scriptName) {
+				TypedQuery<NumberOperation> query = em.createQuery("SELECT no FROM NumberOperation no WHERE no.script.scriptName=:numScript ORDER BY no.statementId", NumberOperation.class)
+						.setParameter("numScript", scriptName);
 				return query.getResultList();
 			}
 
