@@ -36,15 +36,47 @@ public class DataDao {
 			    @Transactional
 			    public void updateDataById(int dataStatementId, int operand1, int operand2, String operator) {
 			    	
-			    	Data data = getData(dataStatementId);
-			    	    	
-			        if (data != null) {
+			    	Data modifyData = getData(dataStatementId);
+			    	Data data1 = getData(operand1);
+			    	Data data2 = getData(operand2);
+			    	
+			        if (modifyData != null && data1 != null && data2 != null) {
 			        	
-			        	data.setDataValue(String.valueOf((Integer.parseInt(getData(operand1).getDataValue())+Integer.parseInt(getData(operand2).getDataValue()))));
+			        	if(operator.equals("+")){
+			        		modifyData.setFinalDataValue(String.valueOf((Integer.parseInt(data1.getFinalDataValue())+Integer.parseInt(data2.getFinalDataValue()))));
+			        	}else if(operator.equals("-")){
+			        		modifyData.setFinalDataValue(String.valueOf((Integer.parseInt(data1.getFinalDataValue())-Integer.parseInt(data2.getFinalDataValue()))));
+			        	}else if(operator.equals("*")){
+			        		modifyData.setFinalDataValue(String.valueOf((Integer.parseInt(data1.getFinalDataValue())*Integer.parseInt(data2.getFinalDataValue()))));
+			        	}else if(operator.equals("/")){
+			        		modifyData.setFinalDataValue(String.valueOf((Integer.parseInt(data1.getFinalDataValue())/Integer.parseInt(data2.getFinalDataValue()))));
+			        	}else if(operator.equals("^")){
+			        		modifyData.setFinalDataValue(String.valueOf(Math.pow(Integer.parseInt(data1.getFinalDataValue()), Integer.parseInt(data2.getFinalDataValue()))));
+			        	}else if(operator.equals("<")){
+			        		modifyData.setFinalDataValue(String.valueOf((Integer.parseInt(data1.getFinalDataValue())<Integer.parseInt(data2.getFinalDataValue()))?Integer.parseInt(data1.getFinalDataValue()):Integer.parseInt(data2.getFinalDataValue())));
+			        	}else if(operator.equals(">")){
+			        		modifyData.setFinalDataValue(String.valueOf((Integer.parseInt(data1.getFinalDataValue())>Integer.parseInt(data2.getFinalDataValue()))?Integer.parseInt(data1.getFinalDataValue()):Integer.parseInt(data2.getFinalDataValue())));
+			        	}else{
+			        		System.out.println("Resultant not modified");
+			        	}
+			        	
 			        } 
 			    }
 			    
-				
+			    @Transactional
+				public void dataAfterUpdate(int dataStatementId, String dataName, String dataType, String initDataValue){
+			    	
+			    	Data data = em.find(Data.class, dataStatementId);
+			    	
+			    	if (data != null) {
+			    		
+			    		data.setDataName(dataName);
+				    	data.setDataType(dataType);
+				    	data.setInitDataValue(initDataValue);
+				    	
+			    	}	
+				}
+			    
 				// Returns a Data object 
 				public Data getData(int dataStmtId) {
 					Data data = em.find(Data.class, dataStmtId);

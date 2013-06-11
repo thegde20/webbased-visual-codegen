@@ -217,7 +217,9 @@
 										<tr>
 											<td><select name="binaryData1">
 													<c:forEach var="varObject" items="${sessionVariableObjects}">
-														<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
+														<c:if test="${varObject.getDataType() eq 'int' or varObject.getDataType() eq 'double'}">
+															<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
+														</c:if>
 													</c:forEach>
 											</select></td>
 											<td><select name="binaryOperator">
@@ -232,13 +234,17 @@
 											</select></td>
 											<td><select name="binaryData2">
 													<c:forEach var="varObject" items="${sessionVariableObjects}">
-														<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
+														<c:if test="${varObject.getDataType() eq 'int' or varObject.getDataType() eq 'double'}">
+															<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
+														</c:if>
 													</c:forEach>
 											</select></td>
 											<td>=</td>
 											<td><select name="result">
 													<c:forEach var="varObject" items="${sessionVariableObjects}">
-														<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
+														<c:if test="${varObject.getDataType() eq 'int' or varObject.getDataType() eq 'double'}">
+															<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
+														</c:if>
 													</c:forEach>
 											</select></td>
 											<td><input type="submit" value="Add operation" /></td>
@@ -297,22 +303,65 @@
 		</c:otherwise>
 	</c:choose>
 	<hr>
+	<table><tr><td>
 	<b>Existing Statements:</b>
 	<table border="" cellspacing="4" cellpadding="4">
 		<tr>
 			<th>Delete Statement</th>
 			<th>Operation Type</th>
 			<th>Statement</th>
-			<th>Update</th>
+			<th>Update Statement</th>
 		</tr>
 		<c:forEach var="dataStatement" items="${sessionVariableObjects}">
 			<form method="POST" action="editdatastatement.html">
 				<tr>
 					<td><input type="submit" name="deleteAction" value="${dataStatement.getStatementId()}" /></td>
 					<td>${dataStatement.getStatementType().getsType()}</td>
-					<td><input type="text" size="50" name="detail" disabled="disabled" value="${dataStatement.getDataType()} ${dataStatement.getDataName()} = ${dataStatement.getDataValue()};" /></td>
-					<td><input type="submit" name="updateAction" value="${dataStatement.getStatementId()}" /></td>
-				</tr>
+					<td><input type="text" size="50" name="detail" disabled="disabled" value="${dataStatement.getDataType()} ${dataStatement.getDataName()} = ${dataStatement.getInitDataValue()};" /></td>
+					<td>
+						<table>
+							<tr>
+								<th>Variable</th>
+								<th>Type</th>
+								<th>Value</th>
+								<th>Update Line</th>
+							</tr>
+							<tr>
+								<td><input type="text" size="5" name="updatedVar" value="${dataStatement.getDataName()}" /></td>
+								<td><c:choose>
+										<c:when test="${dataStatement.getDataType() eq 'int'}">
+											<select name = "updatedType">
+												<option value="int" selected>Integer</option>
+												<option value="double">Double</option>
+												<option value="boolean">Boolean</option>
+												<option value="String">String</option>
+												<option value="date">Date</option>
+											</select>
+										</c:when>
+										<c:when test="${dataStatement.getDataType() eq 'String'}">
+											<select name = "updatedType">
+												<option value="int">Integer</option>
+												<option value="double">Double</option>
+												<option value="boolean">Boolean</option>
+												<option value="String" selected>String</option>
+												<option value="date">Date</option>
+											</select>
+										</c:when>
+										<c:when test="${dataStatement.getDataType() eq 'boolean'}">
+											<select name = "updatedType">
+												<option value="int">Integer</option>
+												<option value="double">Double</option>
+												<option value="boolean" selected>Boolean</option>
+												<option value="String">String</option>
+												<option value="date">Date</option>
+											</select>
+										</c:when>
+									</c:choose></td>
+								<td><input type="text" size="5" name="updatedVarValue" value="${dataStatement.getInitDataValue()}" /></td>
+								<td><input type="submit" name="updateAction" value="${dataStatement.getStatementId()}" /></td>
+							</tr></table>
+						</td>
+					</tr>
 			</form>
 		</c:forEach>
 		<c:forEach var="numberOperation" items="${numberOperations}">
@@ -361,6 +410,9 @@
 	</table>
 	<form method = "POST" action="displayVariableValues.html">
 	<input type="submit" value="Final Values" />
-	</form> 
+	</form>
+	</td>
+			
+		</tr></table> 
 </body>
 </html>

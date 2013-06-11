@@ -216,8 +216,8 @@
 										</tr>
 										<tr>
 											<td><select name="binaryData1">
-													<c:forEach var="data" items="${dataStatements}">
-														<option value="${data.getStatementId()}">${data.getDataName()}</option>
+													<c:forEach var="varObject" items="${sessionVariableObjects}">
+														<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
 													</c:forEach>
 											</select></td>
 											<td><select name="binaryOperator">
@@ -310,7 +310,7 @@
 				<tr>
 					<td><input type="submit" name="deleteAction" value="${dataStatement.getStatementId()}" /></td>
 					<td>${dataStatement.getStatementType().getsType()}</td>
-					<td><input type="text" size="50" name="detail" disabled="disabled" value="${dataStatement.getDataType()} ${dataStatement.getDataName()} = ${dataStatement.getDataValue()};" /></td>
+					<td><input type="text" size="50" name="detail" disabled="disabled" value="${dataStatement.getDataType()} ${dataStatement.getDataName()} = ${dataStatement.getInitDataValue()};" /></td>
 					<td><input type="submit" name="updateAction" value="${dataStatement.getStatementId()}" /></td>
 				</tr>
 			</form>
@@ -359,5 +359,8 @@
 			</form>
 		</c:forEach>
 	</table>
+	<form method = "POST" action="displayVariableValues.html">
+	<input type="submit" value="Final Values" />
+	</form> 
 </body>
 </html>

@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -96,7 +97,14 @@ public class DataController {
 			
 			return "scriptstatementpage";
 		} else {
+			
+			int dataStatementId = Integer.valueOf(request.getParameter("updateAction"));
+			String newDataName = request.getParameter("updatedVar");
+			String newDataType = request.getParameter("updatedType");
+			String newInitDataValue = request.getParameter("updatedVarValue");
 
+			dataDao.dataAfterUpdate(dataStatementId, newDataName, newDataType, newInitDataValue);
+			
 			renderPageValues(model);
 			return "scriptstatementpage";
 		}
@@ -104,36 +112,40 @@ public class DataController {
 	 
 	 @RequestMapping(value="/scriptstatementpage")
 	public String renderMainStatements(ModelMap model,HttpServletRequest request) {
-		 
+		
 		renderPageValues(model);
 		return "scriptstatementpage";
 	}
 	 
 	 
 	 @RequestMapping(value="/displayVariableValues")
-	 public String displayDataValues(){
+	 public String displayDataValues(ModelMap model){
 		 
-		 try{
-	    		String data = "<%@taglib prefix=\"form\" uri=\"http://www.springframework.org/tags/form\"%>\n<%@ taglib prefix=\"c\" uri=\"http://java.sun.com/jsp/jstl/core\"%>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n<html>\n<head>\n\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">\n\t<title>Final Variable Values</title>\n</head>\n<body>\n\t<table border=\"\">\n\t\t<tr>\n\t\t\t<th>Variable</th>\n\t\t\t<th>Value</th>\n\t\t\t<c:forEach var=\"dataStatement\" items=\"${sessionVariableObjects}\">\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>${dataStatement.getDataName()}</td>\n\t\t\t<td>${dataStatement.getDataValue()}</td>\n\t\t</tr>\n\t\t\t</c:forEach>\n\t</table>\n</body>\n</html>";
-	 
-	    		File file = new File("C:/Users/TejaswiniHegde/Documents/GitHub/webbased-visual-codegen/graphicalcodegen/graphic-code-gen/src/main/webapp/WEB-INF/displayFinalValues.jsp");
-	    		//File file = new File("displayFinalValues.jsp");
-	    		//if file doesnt exists, then create it
-	    		if(!file.exists()){
-	    			file.createNewFile();
-	    			System.out.println("File Created");
-	    		}
-	 
-	    		//true = append file
-	    		FileWriter fileWritter = new FileWriter(file.getAbsoluteFile());
-	    			//FileWriter fileWritter = new FileWriter(file.getName(),true);
-	    	        BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
-	    	        bufferWritter.write(data);
-	    	        bufferWritter.close();		        
-	 
-	    	}catch(IOException e){
-	    		e.printStackTrace();
-	    	}
+		try {
+			String fileData = "<%@taglib prefix=\"form\" uri=\"http://www.springframework.org/tags/form\"%>\n<%@ taglib prefix=\"c\" uri=\"http://java.sun.com/jsp/jstl/core\"%>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n<html>\n<head>\n\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">\n\t<title>Final Variable Values</title>\n</head>\n<body>\n\t<table border=\"\">\n\t\t<tr>\n\t\t\t<th>Variable</th>\n\t\t\t<th>Value</th>\n\t\t\t<c:forEach var=\"dataStatement\" items=\"${sessionVariableObjects}\">\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>${dataStatement.getDataName()}</td>\n\t\t\t<td>${dataStatement.getFinalDataValue()}</td>\n\t\t</tr>\n\t\t\t</c:forEach>\n\t</table>\n</body>\n</html>";
+
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			URL url = classLoader.getResource("");
+			String path = url.getPath().substring(1, url.getPath().length()-8);
+			System.out.println(path);
+			File jspFile = new File(path+"displayFinalValues.jsp");
+			
+			// if file does not exist, then create it
+			if (!jspFile.exists()) {
+				jspFile.createNewFile();
+				System.out.println("File Created at "+jspFile.getAbsolutePath());
+			}
+			System.out.println("File present at "+jspFile.getAbsolutePath());
+			FileWriter fileWritter = new FileWriter(jspFile.getAbsoluteFile());
+			BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
+			bufferWritter.write(fileData);
+			bufferWritter.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			renderPageValues(model);
+		}
 		 return "displayFinalValues";
 	 }
 	 

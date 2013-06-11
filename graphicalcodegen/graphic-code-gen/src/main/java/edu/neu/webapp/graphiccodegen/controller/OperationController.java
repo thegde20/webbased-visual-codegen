@@ -77,8 +77,11 @@ public class OperationController {
 			int dataStmtId2 = Integer.parseInt(request.getParameter("binaryData2"));
 			String operator = request.getParameter("binaryOperator");
 			
-			dataDao.updateDataById(resultId, dataStmtId1, dataStmtId2, operator);
+			List<Data> dataStatements = dataDao.getAllDataStatements(scriptName);
+			model.put("sessionVariableObjects", dataStatements);
 			
+			dataDao.updateDataById(resultId, dataStmtId1, dataStmtId2, operator);
+
 			numberOperationDao.persist(new NumberOperation(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), 
 					operationTypeDao.getOperationType(operationType), dataDao.getData(dataStmtId1), dataDao.getData(dataStmtId2), dataDao.getData(resultId), 
 					operator, dataDao.getData(0), null));
@@ -145,7 +148,7 @@ public class OperationController {
 			
 			return "scriptstatementpage";
 		} else {
-
+			
 			renderPageValues(model);
 			return "scriptstatementpage";
 		}
@@ -184,9 +187,6 @@ public class OperationController {
 			
 			List<StringOperation> stringOperations = stringOperationDao.getAllStringOperationStatements(scriptName);
 			model.put("stringOperations", stringOperations);
-
-			List<Data> dataStatements = dataDao.getAllDataStatements(scriptName);
-			model.put("sessionVariableObjects", dataStatements);
 		
 			List<Branch> branchStatements = branchDao.getAllBranchStatements(scriptName);
 			model.put("branchStatements", branchStatements);

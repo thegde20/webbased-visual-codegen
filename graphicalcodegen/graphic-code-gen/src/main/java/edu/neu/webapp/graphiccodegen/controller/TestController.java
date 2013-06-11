@@ -48,7 +48,7 @@ public class TestController {
 	
 	@RequestMapping(value="/insertVariableValues")
     public String insertVariableValues(ModelMap model, HttpServletRequest request) {
-    	
+	
         String var1 = request.getParameter("var1");
         String value1 = request.getParameter("value1");
         String type1 = request.getParameter("type1");

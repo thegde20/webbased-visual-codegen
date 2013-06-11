@@ -14,14 +14,17 @@ public class Data extends Statement implements Serializable{
 
 	private String dataName;
 	
-	private String dataValue;
+	private String initDataValue;
+	
+	private String finalDataValue;
 	
 	private String dataType;
 
 	public Data(StatementType statementType, Script script, String dataName, String dataValue, String dataType) {
 		super(statementType, script);
 		this.dataName = dataName;
-		this.dataValue = dataValue;
+		this.initDataValue = dataValue;
+		this.finalDataValue = dataValue;
 		this.dataType = dataType;
 	}
 
@@ -33,12 +36,20 @@ public class Data extends Statement implements Serializable{
 		this.dataName = dataName;
 	}
 
-	public String getDataValue() {
-		return dataValue;
+	public String getInitDataValue() {
+		return initDataValue;
 	}
 
-	public void setDataValue(String dataValue) {
-		this.dataValue = dataValue;
+	public void setInitDataValue(String initDataValue) {
+		this.initDataValue = initDataValue;
+	}
+
+	public String getFinalDataValue() {
+		return finalDataValue;
+	}
+
+	public void setFinalDataValue(String finalDataValue) {
+		this.finalDataValue = finalDataValue;
 	}
 
 	public String getDataType() {
@@ -48,11 +59,5 @@ public class Data extends Statement implements Serializable{
 	public void setDataType(String dataType) {
 		this.dataType = dataType;
 	}
-
-	@Override
-	public String toString() {
-		return "Data [dataName=" + dataName + ", dataValue=" + dataValue
-				+ ", dataType=" + dataType + "]";
-	}
-
+		
 }

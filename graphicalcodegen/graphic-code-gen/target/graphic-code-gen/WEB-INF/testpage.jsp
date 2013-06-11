@@ -18,7 +18,7 @@
 			</tr>
 			<tr>
 				<td><input type="text" name="var1" /></td>
-				<td><input type="text" name="value1" /></td>
+				<td><input type="text" name="value1" value=0 /></td>
 				<td><Select name="type1">
 						<option value="int">Integer</option>
 						<option value="double">Double</option>
@@ -29,7 +29,7 @@
 			</tr>
 			<tr>
 				<td><input type="text" name="var2" /></td>
-				<td><input type="text" name="value2" /></td>
+				<td><input type="text" name="value2" value=0 /></td>
 				<td><Select name="type2">
 						<option value="int">Integer</option>
 						<option value="double">Double</option>
@@ -41,5 +41,6 @@
 			<tr><td><input type="submit" name="Go" value="Send" /></td></tr>
 		</table>
 	</form>
+	<marquee>This is a test simulation of outer module</marquee>
 </body>
 </html>
