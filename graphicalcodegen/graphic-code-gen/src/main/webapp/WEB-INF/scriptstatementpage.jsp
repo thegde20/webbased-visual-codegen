@@ -307,10 +307,11 @@
 	<b>Existing Statements:</b>
 	<table border="" cellspacing="4" cellpadding="4">
 		<tr>
-			<th>Delete Statement</th>
+			<th>Delete</th>
 			<th>Operation Type</th>
 			<th>Statement</th>
-			<th>Update Statement</th>
+			<th>Edit Statement</th>
+			<th>Update</th>
 		</tr>
 		<c:forEach var="dataStatement" items="${sessionVariableObjects}">
 			<form method="POST" action="editdatastatement.html">
@@ -324,7 +325,6 @@
 								<th>Variable</th>
 								<th>Type</th>
 								<th>Value</th>
-								<th>Update Line</th>
 							</tr>
 							<tr>
 								<td><input type="text" size="5" name="updatedVar" value="${dataStatement.getDataName()}" /></td>
@@ -358,9 +358,9 @@
 										</c:when>
 									</c:choose></td>
 								<td><input type="text" size="5" name="updatedVarValue" value="${dataStatement.getInitDataValue()}" /></td>
-								<td><input type="submit" name="updateAction" value="${dataStatement.getStatementId()}" /></td>
 							</tr></table>
 						</td>
+						<td><input type="submit" name="updateAction" value="${dataStatement.getStatementId()}" /></td>
 					</tr>
 			</form>
 		</c:forEach>
@@ -371,9 +371,193 @@
 				<td>${numberOperation.getStatementType().getsType()} - ${numberOperation.getOperationType().getoType()}</td>
 				<c:if test="${numberOperation.getOperationType().getoType() eq 'Unary'}">
 					<td><input type="text" size="50" name="detail" disabled="disabled" value="${numberOperation.getData1().getDataName()}${numberOperation.getOperator1()};" /></td>
+					<td>
+						<table>
+							<tr>
+								<th>Variable</th>
+								<th>Unary Operator</th>
+							</tr>
+							<tr>
+								<td>
+									<select name="updatedUnaryVar">
+										<c:forEach var="dataStatement" items="${sessionVariableObjects}">
+											<c:if test="${dataStatement.getDataType() eq 'int' or dataStatement.getDataType() eq 'double'}">
+											<c:choose>
+												<c:when test="${dataStatement.getDataName() eq numberOperation.getData1().getDataName()}">
+													<option value="${dataStatement.getDataName()}" selected="selected">${dataStatement.getDataName()}</option>
+												</c:when>
+												<c:otherwise>
+													<option value="${dataStatement.getDataName()}">${dataStatement.getDataName()}</option>
+												</c:otherwise>
+											</c:choose>
+											</c:if>
+										</c:forEach>
+									</select>
+								</td>
+								<td>
+									<select name="updatedUnaryOperator">
+										<c:choose>
+											<c:when test="${numberOperation.getOperator1() eq '++'}">
+												<option value="++" selected="selected">++</option>
+												<option value="--">--</option>
+											</c:when>
+											<c:otherwise>
+												<option value="++">++</option>
+												<option value="--" selected="selected">--</option>
+											</c:otherwise>
+										</c:choose>
+									</select>
+								</td>
+							</tr>
+						</table>
+					</td>
 				</c:if>
 				<c:if test="${numberOperation.getOperationType().getoType() eq 'Binary'}">
 					<td><input type="text" size="50" name="detail" disabled="disabled" value="${numberOperation.getResult().getDataName()} = ${numberOperation.getData1().getDataName()} ${numberOperation.getOperator1()} ${numberOperation.getData2().getDataName()};" /></td>
+					<td><table>
+							<tr>
+								<th>Operand</th>
+								<th>Operator</th>
+								<th>Operand</th>
+								<th>=</th>
+								<th>Result</th>
+							</tr>
+							<tr>
+								<td>
+									<select name="updatedBinaryVar1">
+										<c:forEach var="dataStatement" items="${sessionVariableObjects}">
+											<c:if test="${dataStatement.getDataType() eq 'int' or dataStatement.getDataType() eq 'double'}">
+											<c:choose>
+												<c:when test="${dataStatement.getDataName() eq numberOperation.getData1().getDataName()}">
+													<option value="${dataStatement.getDataName()}" selected="selected">${dataStatement.getDataName()}</option>
+												</c:when>
+												<c:otherwise>
+													<option value="${dataStatement.getDataName()}">${dataStatement.getDataName()}</option>
+												</c:otherwise>
+											</c:choose>
+											</c:if>
+										</c:forEach>
+									</select>
+								</td>
+								<td>
+									<select name="updatedBinaryOperator1">
+										<c:choose>
+											<c:when test="${numberOperation.getOperator1() eq '+'}">
+												<option value="+" selected="selected">+</option>
+												<option value="-">-</option>
+												<option value="*">*</option>
+												<option value="/">/</option>
+												<option value="^">^</option>
+												<option value=">">&gt;</option>
+												<option value="<">&lt;</option>
+												<option value="==">==</option>
+											</c:when>
+											<c:when test="${numberOperation.getOperator1() eq '-'}">
+												<option value="+">+</option>
+												<option value="-" selected="selected">-</option>
+												<option value="*">*</option>
+												<option value="/">/</option>
+												<option value="^">^</option>
+												<option value=">">&gt;</option>
+												<option value="<">&lt;</option>
+												<option value="==">==</option>
+											</c:when>
+											<c:when test="${numberOperation.getOperator1() eq '*'}">
+												<option value="+">+</option>
+												<option value="-">-</option>
+												<option value="*" selected="selected">*</option>
+												<option value="/">/</option>
+												<option value="^">^</option>
+												<option value=">">&gt;</option>
+												<option value="<">&lt;</option>
+												<option value="==">==</option>
+											</c:when>
+											<c:when test="${numberOperation.getOperator1() eq '/'}">
+												<option value="+">+</option>
+												<option value="-">-</option>
+												<option value="*">*</option>
+												<option value="/" selected="selected">/</option>
+												<option value="^">^</option>
+												<option value=">">&gt;</option>
+												<option value="<">&lt;</option>
+												<option value="==">==</option>
+											</c:when>
+											<c:when test="${numberOperation.getOperator1() eq '^'}">
+												<option value="+">+</option>
+												<option value="-">-</option>
+												<option value="*">*</option>
+												<option value="/">/</option>
+												<option value="^" selected="selected">^</option>
+												<option value=">">&gt;</option>
+												<option value="<">&lt;</option>
+												<option value="==">==</option>
+											</c:when>
+											<c:when test="${numberOperation.getOperator1() eq '>'}">
+												<option value="+">+</option>
+												<option value="-">-</option>
+												<option value="*">*</option>
+												<option value="/">/</option>
+												<option value="^">^</option>
+												<option value=">" selected="selected">&gt;</option>
+												<option value="<">&lt;</option>
+												<option value="==">==</option>
+											</c:when>
+											<c:when test="${numberOperation.getOperator1() eq '<'}">
+												<option value="+">+</option>
+												<option value="-">-</option>
+												<option value="*">*</option>
+												<option value="/">/</option>
+												<option value="^">^</option>
+												<option value=">">&gt;</option>
+												<option selected="selected" value="<">&lt;</option>
+												<option value="==">==</option>
+											</c:when>
+											<c:otherwise>
+												<option value="+">+</option>
+												<option value="-">-</option>
+												<option value="*">*</option>
+												<option value="/">/</option>
+												<option value="^">^</option>
+												<option value=">">&gt;</option>
+												<option value="<">&lt;</option>
+												<option selected="selected" value="==">==</option>
+											</c:otherwise>
+										</c:choose>
+									</select>
+								</td>
+								<td>
+									<select name="updatedBinaryVar2">
+										<c:forEach var="dataStatement" items="${sessionVariableObjects}">
+										<c:if test="${dataStatement.getDataType() eq 'int' or dataStatement.getDataType() eq 'double'}">
+											<c:choose>
+												<c:when test="${dataStatement.getDataName() eq numberOperation.getData2().getDataName()}">
+													<option value="${dataStatement.getDataName()}" selected="selected">${dataStatement.getDataName()}</option>
+												</c:when>
+												<c:otherwise>
+													<option value="${dataStatement.getDataName()}">${dataStatement.getDataName()}</option>
+												</c:otherwise>
+											</c:choose>
+										</c:if>
+										</c:forEach>
+									</select>
+								</td>
+								<td>=</td>
+								<td><select name="updatedBinaryRes">
+										<c:forEach var="dataStatement" items="${sessionVariableObjects}">
+										<c:if test="${dataStatement.getDataType() eq 'int' or dataStatement.getDataType() eq 'double'}">
+											<c:choose>
+												<c:when test="${dataStatement.getDataName() eq numberOperation.getResult().getDataName()}">
+													<option value="${dataStatement.getDataName()}" selected="selected">${dataStatement.getDataName()}</option>
+												</c:when>
+												<c:otherwise>
+													<option value="${dataStatement.getDataName()}">${dataStatement.getDataName()}</option>
+												</c:otherwise>
+											</c:choose>
+										</c:if>
+										</c:forEach>
+									</select></td>
+							</tr>
+						</table></td>
 				</c:if>
 				<c:if test="${numberOperation.getOperationType().getoType() eq 'Decision'}">
 					<td><input type="text" size="50" name="detail" disabled="disabled" value="${numberOperation.getResult().getDataName()} = ${numberOperation.getData1().getDataName()} ${numberOperation.getOperator1()} ${numberOperation.getData2().getDataName()} ${numberOperation.getOperator2()} ${numberOperation.getData3().getDataName()};" /></td>
@@ -412,7 +596,6 @@
 	<input type="submit" value="Final Values" />
 	</form>
 	</td>
-			
 		</tr></table> 
 </body>
 </html>

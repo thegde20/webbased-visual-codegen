@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.neu.webapp.graphiccodegen.model.Node;
-import edu.neu.webapp.graphiccodegen.model.NodePK;
 
 @Component
 public class NodeDao {
