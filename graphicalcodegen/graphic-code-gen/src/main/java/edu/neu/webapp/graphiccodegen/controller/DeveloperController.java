@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.neu.webapp.graphiccodegen.dao.ApplicationDao;
 import edu.neu.webapp.graphiccodegen.dao.DeveloperDao;
-import edu.neu.webapp.graphiccodegen.model.Application;
-import edu.neu.webapp.graphiccodegen.model.Developer;
+import edu.neu.webapp.graphiccodegen.entities.Application;
+import edu.neu.webapp.graphiccodegen.entities.Developer;
 
 @Controller
 public class DeveloperController {

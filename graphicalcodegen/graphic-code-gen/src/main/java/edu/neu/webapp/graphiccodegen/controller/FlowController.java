@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import edu.neu.webapp.graphiccodegen.dao.ApplicationDao;
 import edu.neu.webapp.graphiccodegen.dao.FlowDao;
 import edu.neu.webapp.graphiccodegen.dao.NodeDao;
-import edu.neu.webapp.graphiccodegen.model.Application;
-import edu.neu.webapp.graphiccodegen.model.Flow;
-import edu.neu.webapp.graphiccodegen.model.Node;
+import edu.neu.webapp.graphiccodegen.entities.Application;
+import edu.neu.webapp.graphiccodegen.entities.Flow;
+import edu.neu.webapp.graphiccodegen.entities.Node;
 
 @Controller
 public class FlowController {

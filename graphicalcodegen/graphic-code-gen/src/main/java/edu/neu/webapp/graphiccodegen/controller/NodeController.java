@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.neu.webapp.graphiccodegen.dao.FlowDao;
 import edu.neu.webapp.graphiccodegen.dao.NodeDao;
-import edu.neu.webapp.graphiccodegen.model.Flow;
-import edu.neu.webapp.graphiccodegen.model.Node;
-import edu.neu.webapp.graphiccodegen.model.NodePK;
+import edu.neu.webapp.graphiccodegen.entities.Flow;
+import edu.neu.webapp.graphiccodegen.entities.Node;
+import edu.neu.webapp.graphiccodegen.entities.NodePK;
 
 @Controller
 public class NodeController {
