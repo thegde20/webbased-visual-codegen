@@ -45,6 +45,13 @@ public class EventDao {
 			em.remove(evt);
 		}
 	}
+	
+	@Transactional
+	public List<Event> getEventBySourceNode(int i){
+		TypedQuery<Event> query = em.createQuery("select e from Event e where e.nodeSource.id = :id", Event.class);
+		query.setParameter("id", i);
+		return query.getResultList();
+	}
 
 
 }
