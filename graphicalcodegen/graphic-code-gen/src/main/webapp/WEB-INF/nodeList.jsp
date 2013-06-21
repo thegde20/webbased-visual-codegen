@@ -31,7 +31,12 @@
 				<c:forEach var="fl" items="${allFLows}">
 				<option value="${fl.id}">${fl.name}</option>
 				</c:forEach>
-				</select></td>
+				</select>
+				<select name="type">
+				<option value="IO">IO</option>
+				<option value="Form">Form</option>
+				<option value="Display">Display</option></select>
+				</td>
 			</tr>
 			<tr>
 				<td><input type="submit" value="Add" /></td>
