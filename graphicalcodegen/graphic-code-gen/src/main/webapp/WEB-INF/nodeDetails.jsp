@@ -22,6 +22,7 @@
         <form method="POST" action="editNode.html" name="editNodeForm">
             Name:	<c:out value="${node.name}" /><br/>
             Flow:	<c:out value="${node.flow.name}" /><br/>
+            Type:	<c:out value="${node.type}"></c:out>
             <input type="hidden" name="deleteId" value="${node.id}" />
             <input type="submit" value="Delete" />
         </form>
