@@ -26,6 +26,8 @@ public class Node implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	private String type;
 
 	private String name;
 
@@ -45,9 +47,10 @@ public class Node implements Serializable {
 	public Node() {
 	}
 
-	public Node (String name,Flow flow){
+	public Node (String name,Flow flow,String type){
 		this.name=name;
 		this.flow = flow;
+		this.type = type;
 	}
 
 	public String getName() {
@@ -64,6 +67,14 @@ public class Node implements Serializable {
 
 	public void setFlow(Flow flow) {
 		this.flow = flow;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }
