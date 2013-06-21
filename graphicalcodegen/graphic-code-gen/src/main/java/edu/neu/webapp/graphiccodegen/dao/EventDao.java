@@ -9,7 +9,7 @@ import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import edu.neu.webapp.graphiccodegen.model.Event;
+import edu.neu.webapp.graphiccodegen.entities.Event;
 
 @Component
 public class EventDao {
