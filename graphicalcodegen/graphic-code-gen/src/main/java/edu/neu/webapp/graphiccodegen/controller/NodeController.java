@@ -25,9 +25,10 @@ public class NodeController {
 	public String addNode(ModelMap model, HttpServletRequest request) {
 		String name = request.getParameter("name");
 		String  flowId = request.getParameter("flow");
+		String  type = request.getParameter("type");
 
 		Flow flowReq = flowDao.getFlow(flowId);
-		nodeDao.persist(new Node(name,flowReq));
+		nodeDao.persist(new Node(name,flowReq,type));
 //		app.getFlows().add(f);
 
 		model.put("allNodes", nodeDao.getAllNodes());
