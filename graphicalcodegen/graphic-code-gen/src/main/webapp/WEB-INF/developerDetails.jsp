@@ -9,7 +9,7 @@
 <html>
     <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-        <title>Developer List</title>
+        <title>Developer Details</title>
     </head>
  
     <body>

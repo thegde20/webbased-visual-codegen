@@ -1,7 +1,6 @@
 package edu.neu.webapp.graphiccodegen.controller;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.FlowView.FlowStrategy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
@@ -12,10 +11,10 @@ import edu.neu.webapp.graphiccodegen.dao.EventDao;
 import edu.neu.webapp.graphiccodegen.dao.FlowDao;
 import edu.neu.webapp.graphiccodegen.dao.NodeDao;
 import edu.neu.webapp.graphiccodegen.dao.RunAppDao;
-import edu.neu.webapp.graphiccodegen.model.AppFlowStart;
-import edu.neu.webapp.graphiccodegen.model.Application;
-import edu.neu.webapp.graphiccodegen.model.Flow;
-import edu.neu.webapp.graphiccodegen.model.FlowNodeStart;
+import edu.neu.webapp.graphiccodegen.entities.AppFlowStart;
+import edu.neu.webapp.graphiccodegen.entities.Application;
+import edu.neu.webapp.graphiccodegen.entities.Flow;
+import edu.neu.webapp.graphiccodegen.entities.FlowNodeStart;
 
 public class RunAppController {
 

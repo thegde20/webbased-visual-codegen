@@ -77,4 +77,20 @@ public class Node implements Serializable {
 		this.type = type;
 	}
 
+	public List<Event> getSourceEvent() {
+		return sourceEvent;
+	}
+
+	public void setSourceEvent(List<Event> sourceEvent) {
+		this.sourceEvent = sourceEvent;
+	}
+
+	public List<Event> getTargetEvent() {
+		return targetEvent;
+	}
+
+	public void setTargetEvent(List<Event> targetEvent) {
+		this.targetEvent = targetEvent;
+	}
+
 }

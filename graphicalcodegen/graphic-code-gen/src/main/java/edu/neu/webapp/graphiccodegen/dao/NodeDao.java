@@ -9,6 +9,7 @@ import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import edu.neu.webapp.graphiccodegen.entities.Event;
 import edu.neu.webapp.graphiccodegen.entities.Node;
 
 @Component
@@ -44,6 +45,20 @@ public class NodeDao {
 		if (nd != null) {
 			em.remove(nd);
 		}
+	}
+	public List<Event> getSourceEventsForNode(int id){
+		TypedQuery<Event> query = em.createQuery(
+				"SELECT a FROM Event a where a.nodeSource.id=:id", Event.class);
+		query.setParameter("id", id);
+		return query.getResultList();
+	
+	}
+	public List<Event> getTargetEventsForNode(int id){
+		TypedQuery<Event> query = em.createQuery(
+				"SELECT a FROM Event a where a.nodeTarget.id=:id", Event.class);
+		query.setParameter("id", id);
+		return query.getResultList();
+	
 	}
 
 }

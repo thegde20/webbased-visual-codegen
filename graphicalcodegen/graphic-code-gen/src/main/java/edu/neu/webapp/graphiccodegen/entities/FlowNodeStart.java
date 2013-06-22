@@ -1,4 +1,4 @@
-package edu.neu.webapp.graphiccodegen.model;
+package edu.neu.webapp.graphiccodegen.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;

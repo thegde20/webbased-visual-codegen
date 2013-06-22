@@ -55,4 +55,9 @@
 	<bean id="branchService" class="edu.neu.webapp.graphiccodegen.services.BranchService"> </bean>
 	<bean id="typeService" class="edu.neu.webapp.graphiccodegen.services.TypeService"> </bean>
 	<bean id="scriptService" class="edu.neu.webapp.graphiccodegen.services.ScriptService"> </bean>
+	<bean id="applicationService" class="edu.neu.webapp.graphiccodegen.services.ApplicationService"> </bean>
+	<bean id="developerService" class="edu.neu.webapp.graphiccodegen.services.DeveloperService"> </bean>
+	<bean id="flowService" class="edu.neu.webapp.graphiccodegen.services.FlowService"> </bean>
+	<bean id="nodeService" class="edu.neu.webapp.graphiccodegen.services.NodeService"> </bean>
+	<bean id="eventService" class="edu.neu.webapp.graphiccodegen.services.EventService"> </bean>
 </beans>
