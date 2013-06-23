@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.neu.webapp.graphiccodegen.dao.EventDao;
 import edu.neu.webapp.graphiccodegen.dao.RunAppDao;
-import edu.neu.webapp.graphiccodegen.model.AppFlowStart;
+import edu.neu.webapp.graphiccodegen.entities.AppFlowStart;
 import edu.neu.webapp.graphiccodegen.entities.Event;
-import edu.neu.webapp.graphiccodegen.model.FlowNodeStart;
+import edu.neu.webapp.graphiccodegen.entities.FlowNodeStart;
 
 
 @Controller
