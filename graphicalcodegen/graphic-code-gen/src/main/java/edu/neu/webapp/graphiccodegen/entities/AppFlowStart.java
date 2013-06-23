@@ -3,7 +3,6 @@ package edu.neu.webapp.graphiccodegen.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
-
 /**
  * Entity implementation class for Entity: AppFlowStart
  *

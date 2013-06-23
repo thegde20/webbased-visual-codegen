@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.neu.webapp.graphiccodegen.entities.Application;
+import edu.neu.webapp.graphiccodegen.entities.Flow;
 
 @Component
 public class ApplicationDao {
@@ -45,5 +46,13 @@ public class ApplicationDao {
 			em.remove(app);
 		}
 	}
+	public List<Flow> getFlowsForApplication(int id){
+		TypedQuery<Flow> query = em.createQuery(
+				"SELECT a FROM Flow a where a.application.id=:id", Flow.class);
+		query.setParameter("id", id);
+		return query.getResultList();
+	
+	}
+
 
 }

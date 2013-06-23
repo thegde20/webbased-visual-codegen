@@ -9,6 +9,7 @@ import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import edu.neu.webapp.graphiccodegen.entities.Application;
 import edu.neu.webapp.graphiccodegen.entities.Developer;
 
 @Component
@@ -43,6 +44,13 @@ public class DeveloperDao {
 		if (dev != null) {
 			em.remove(dev);
 		}
+	}
+	public List<Application> getAllApplicationsForDeveloper(String email){
+		TypedQuery<Application> query = em.createQuery(
+				"SELECT a FROM Application a where a.developer.email=:email", Application.class);
+		query.setParameter("email", email);
+		return query.getResultList();
+	
 	}
 
 }

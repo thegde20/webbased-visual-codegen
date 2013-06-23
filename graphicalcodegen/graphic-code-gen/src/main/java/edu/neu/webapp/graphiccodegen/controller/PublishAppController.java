@@ -1,7 +1,6 @@
 package edu.neu.webapp.graphiccodegen.controller;
 
 import java.io.File;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import edu.neu.webapp.graphiccodegen.dao.EventDao;
 import edu.neu.webapp.graphiccodegen.dao.RunAppDao;
 import edu.neu.webapp.graphiccodegen.entities.AppFlowStart;
-import edu.neu.webapp.graphiccodegen.entities.Event;
 import edu.neu.webapp.graphiccodegen.entities.FlowNodeStart;
 
 
