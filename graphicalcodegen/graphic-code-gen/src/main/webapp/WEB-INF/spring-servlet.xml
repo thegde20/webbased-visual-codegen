@@ -49,6 +49,12 @@
 			<value>.jsp</value>
 		</property>
 	</bean>
+	<bean name="/developer.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  
+    <property name="viewName" value="developerAjax"/>  
+</bean>
+<bean name="/developerDetails.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  
+    <property name="viewName" value="developerDetailsAjax"/>  
+</bean>  
 	<bean id="codeGenUtils" class="edu.neu.webapp.graphiccodegen.services.CodeGenUtils"> </bean>
 	<bean id="dataService" class="edu.neu.webapp.graphiccodegen.services.DataService"> </bean>
 	<bean id="operationService" class="edu.neu.webapp.graphiccodegen.services.OperationService"> </bean>
