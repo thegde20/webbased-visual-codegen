@@ -18,7 +18,9 @@ public class Developer implements Serializable {
 	@Id
 	private String email;
 
-	private String name;
+	private String firstName;
+	
+	private String lastName;
 
 	//bi-directional many-to-one association to Application
 	@OneToMany(mappedBy="developer", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -26,8 +28,9 @@ public class Developer implements Serializable {
 
 	public Developer() {
 	}
-	public Developer(String email,String name) {
-		this.name= name;
+	public Developer(String email,String firstName,String lastName) {
+		this.firstName= firstName;
+		this.lastName= lastName;
 		this.email= email;
 	}
 
@@ -37,14 +40,6 @@ public class Developer implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public List<Application> getApplications() {
@@ -70,6 +65,18 @@ public class Developer implements Serializable {
 		application.setDeveloper(null);
 
 		return application;
+	}
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 }
