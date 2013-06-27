@@ -20,16 +20,17 @@ public class DeveloperService {
 	@Autowired
 	private ApplicationDao appDao;
 
-	public void addDeveloperService(ModelMap model, HttpServletRequest request) {
-		String email = request.getParameter("email");
-		String name = request.getParameter("name");
-
-		devDao.persist(new Developer(email, name));
+	public List<Developer> addDeveloperService(Developer d) {
+		/*String email = request.getParameter("email");
+		String name = request.getParameter("firstName");
+		String lastName = request.getParameter("lastName");
+*/
+		devDao.persist(d);
 
 		List<Developer> allDevelopers = devDao.getAllDevelopers();
 		getAppsForDeveloper(allDevelopers);
-		model.put("developers", allDevelopers);
-
+		//model.put("developers", allDevelopers);
+		return allDevelopers;
 
 	}
 	public void getAppsForDeveloper(List<Developer> allDevelopers){
@@ -44,37 +45,35 @@ public class DeveloperService {
 	}
 	
 
-	public void getAllDataService(ModelMap model, HttpServletRequest request) {
+	public List<Developer> getAllDataService() {
 		System.out.println("in getAlldata");
 		List<Developer> allDevelopers = devDao.getAllDevelopers();
 		getAppsForDeveloper(allDevelopers);
-		model.put("developers", allDevelopers);
-
+		//model.put("developers", allDevelopers);
+		return allDevelopers;
 	}
 
 
-	public void deleteDeveloperService(ModelMap model, HttpServletRequest request) {
+	public List<Developer> deleteDeveloperService(String id) {
 
-			String devEmail = request.getParameter("deleteId");
-			devDao.deleteByEmail(devEmail);
+			//String devEmail = request.getParameter("deleteId");
+			devDao.deleteByEmail(id);
 			
 			List<Developer> allDevelopers = devDao.getAllDevelopers();
 			getAppsForDeveloper(allDevelopers);
-			model.put("developers", allDevelopers);
+			return allDevelopers;
+			//model.put("developers", allDevelopers);
 		} 
 		
 		
 		
-		public void detailsDeveloperService(ModelMap model,HttpServletRequest request)
+		public Developer detailsDeveloperService(String email)
 		{
-			String devEmail = request.getParameter("detailId");
-			Developer devRequested = devDao.getDeveloper(devEmail);
+			Developer devRequested = devDao.getDeveloper(email);
 			//System.out.println("-----"+devRequested.getApplications().size());
 			
-			List<Application> allApps = appDao.getAllApplications();
 			devRequested.setApplications(devDao.getAllApplicationsForDeveloper(devRequested.getEmail()));
-			model.put("developer", devRequested);
-			model.put("applications",allApps);
+			return devRequested;
 		}
 
 	}
