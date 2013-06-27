@@ -34,7 +34,7 @@ public class DeveloperDao {
 	// Retrieves all the StatementType:
 	public List<Developer> getAllDevelopers() {
 		TypedQuery<Developer> query = em.createQuery(
-				"SELECT d FROM Developer d ORDER BY d.name", Developer.class);
+				"SELECT d FROM Developer d ORDER BY d.firstName", Developer.class);
 		return query.getResultList();
 	}
 
