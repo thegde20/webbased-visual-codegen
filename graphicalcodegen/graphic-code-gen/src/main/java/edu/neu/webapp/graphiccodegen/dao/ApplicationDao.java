@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.neu.webapp.graphiccodegen.entities.Application;
+import edu.neu.webapp.graphiccodegen.entities.Developer;
 import edu.neu.webapp.graphiccodegen.entities.Flow;
 
 @Component
@@ -27,8 +28,8 @@ public class ApplicationDao {
 	}
 
 	// Returns a application object whose id is = value of id
-	public Application getApplication(String Id) {
-		Application app = em.find(Application.class, Integer.parseInt(Id));
+	public Application getApplication(int Id) {
+		Application app = em.find(Application.class, Id);
 		return app;
 	}
 
@@ -52,6 +53,13 @@ public class ApplicationDao {
 		query.setParameter("id", id);
 		return query.getResultList();
 	
+	}
+	@Transactional
+	public void updateApplication(String name,int id){
+		Application app = em.find(Application.class, id);
+		if(app != null){
+			app.setName(name);
+		}
 	}
 
 

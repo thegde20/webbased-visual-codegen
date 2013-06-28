@@ -25,6 +25,7 @@ public class DeveloperDao {
 		em.persist(d);
 	}
 
+	
 	// Returns a Developer object whose email is = value of email
 	public Developer getDeveloper(String email) {
 		Developer dev = em.find(Developer.class, email);
@@ -51,6 +52,15 @@ public class DeveloperDao {
 		query.setParameter("email", email);
 		return query.getResultList();
 	
+	}
+	
+	@Transactional
+	public void updateDeveloper(String fName,String lName,String email){
+		Developer devRequested = em.find(Developer.class, email);
+		if(devRequested != null){
+			devRequested.setFirstName(fName);
+			devRequested.setLastName(lName);
+		}
 	}
 
 }
