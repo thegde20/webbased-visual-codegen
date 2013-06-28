@@ -49,7 +49,7 @@ public class RunAppController {
 	}
 
 	//added for testing
-	public void addValues(String appId,String flowID){
+	public void addValues(int appId,String flowID){
 		AppFlowStart appFlow = new AppFlowStart();
 		Application app = appDao.getApplication(appId);
 		Flow flow = flowDao.getFlow(flowID);
