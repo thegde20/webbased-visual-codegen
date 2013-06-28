@@ -10,49 +10,142 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Applications</title>
-</head>
+<script src="js/jquery-min.js"></script>
+        <script>
+	    	var entityList;
+	        var entityListItemTemplate = null;
+	        var developerSelect, developerOptionTemplate;
+        	var developerList, developerListItemTemplate, applicationDetailsLink;
+	        $(function(){
+	        	entityList = $("#entityList");
+	        	entityListItemTemplate = $("#entityList li").clone();
 
-<body>
-    	<a href="mainmenu.html">Main Menu</a>
-	<h1>Applications</h1>
-	<h2>Create New Application</h2>
-	<form method="POST" action="addApplication.html">
-		Application Name: <input type="text" name="name" /><br /> Developer:
-		<select name="developer">
-			<c:forEach var="dev" items="${developers}">
-				<option value="${dev.email}">${dev.name}</option>
-			</c:forEach>
-		</select> 
-		<input type="submit" value="Create" />
-	</form>
+	        	updateEntityList();
 
-	<hr>
-	<h2>Existing Applications</h2>
-	<table border="" cellspacing="4" cellpadding="4">
-		<tr>
-			<th>Name</th>
-			<th>Developer</th>
-			<th>Flows</th>
-		</tr>
-		<c:forEach var="app" items="${apps}">
-			<tr>
-				<td>${app.name}</td>
-				<td>${app.developer.name}</td>
-				<td>
-				<c:forEach var="flow" items="${app.flows}">
-				${flow.name}
-				</c:forEach>
-				</td>
-			</tr>
-			<form method="POST" action="editApp.html">
-			<tr>
-				<td>
-				<input type="hidden" name="detailId" value="${app.id}" />
-				<input type="submit" value="Edit" /></td>
-			</tr>
-			</form>
-		</c:forEach>
-	</table>
-	<hr>
-</body>
+        		developerSelect = $("#developerSelect");
+        		developerOptionTemplate = $("#developerSelect option").clone();
+        		
+        		developerList = $("#developerList");
+        		developerListItemTemplate = $("#developerList li").clone();
+	        	
+	        	$("#createEntityLink").click(createEntity);
+	        	getAllDeveloper(renderDeveloperOptions);
+	        });
+
+	        function updateEntityList(entities) {
+	        	if(entities == null || typeof entities == "undefined")
+	        		getAllEntitiesService(renderEntityList);
+	        	else
+	        		renderEntityList(entities);
+	        }
+	        function getAllDeveloper(callback) {
+	        	$.ajax({
+	        		"url" : "rest/developer/getDevelopers",
+	        		"success" : function(entities) {
+	        			callback(entities);
+	        		}
+	        	});
+	        }
+	        function renderDeveloperOptions(entities) {
+       			developerSelect.empty();
+       			var entityOption;
+       			for(var i in entities) {
+       				var entity = entities[i];
+       				entityOption = developerOptionTemplate.clone();
+       				entityOption.html(entity.firstName);
+       				entityOption.attr("value", entity.email);
+       				developerSelect.append(entityOption);
+       			}
+	        }
+	        
+	        function renderEntityList(entities) {
+       			entityList.empty();
+       			var entityListItem;
+       			for(var i in entities) {
+       				var entity = entities[i];
+       				entityListItem = entityListItemTemplate.clone();
+       				entityListItem.find(".entityName").html(entity.name);
+       				entityListItem.data("entity", entity);
+       				//entityListItem.
+       				entityList.append(entityListItem);
+       			}
+       			$(".entityDetailsLink").on("click", navigateToEntityDetails);
+       			$(".deleteLink").on("click", deleteEntity);
+	        }
+	        
+	        function deleteEntity() {
+	        	var deleteLink = $(this);
+	        	var li = deleteLink.parents("li");
+	        	var entity = li.data("entity");
+	        	var id = entity.id;
+	        	$.ajax({
+	        		"url" : "rest/application/"+entity.id,
+	        		"type" : "DELETE",
+	        		"success" : function(entities) {
+	        			renderEntityList(entities);
+        			},
+        			"error" : function(err) {
+        				console.log(err);
+        			}
+	        	});
+	        }
+	        
+	        function getAllEntitiesService(callback) {
+	        	$.ajax({
+	        		"url" : "rest/application/getApplications",
+	        		"success" : function(entities) {
+	        			callback(entities);
+	        		}
+	        	});
+	        }
+      
+	        function navigateToEntityDetails() {
+	        	var detailsLink = $(this);
+	        	var li = detailsLink.parents("li");
+	        	var entity = li.data("entity");
+	        	window.location.href = "applicationDetails.html?entityId="+entity.id;
+	        }
+	        
+	        function createEntity() {
+	        	var name = $("#entityName").val();
+        		$.ajax({
+        			"url" : "rest/application/addApp/"+name+"/"+developerSelect.val(),
+        			"type" : "POST",
+        			"success" : function(entities) {
+        				updateEntityList(entities);
+        			}
+        		});
+	        }
+        </script>
+    </head>
+ 
+    <body>
+    	<a href="applicationList.html">Applications</a>
+    	<a href="developer.html">Developers</a>
+    	
+    	<h1>Applications</h1>
+    	
+    	<h2>Create New Application</h2>
+    	
+		Application Name: <input type="text" name="name" id="entityName"/><br/>
+		<h2>Developers</h2>
+		Developer:
+		<select id="developerSelect">
+			<option value="developerId">Developer NAME</option>
+		</select>
+		<a href="#" id="createEntityLink">Create</a>
+ 
+        <hr>
+        
+		<h2>Existing Applications</h2>
+		
+        <ol id="entityList">
+			<li>
+				<span class="entityName"></span>
+				<a href="#" class="entityDetailsLink">Details</a>
+				<a href="#" class="deleteLink">Delete</a>
+			</li>
+		</ol>
+		
+	</body>
 </html>

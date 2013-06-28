@@ -9,38 +9,86 @@
 <html>
     <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-        <title>Application Details</title>
-    </head>
- 
-    <body>
-    	<a href="mainmenu.html">Main Menu</a>
-    	<a href="flowList.html">All Flows</a>
-    	<h1>Application Details</h1>
-    	
-    	<h2>Update Application</h2>
+        <title>Developer List</title>
+        <script src="js/jquery-min.js"></script>
+<script src="js/purl.js"></script>
+        <script>
+        	var entityName, firstName, lastName, entityId;
+        	$(function(){
+        		var url = $.url();
+        		var id = url.param("entityId");
+        		updateEntityDetails(id);
+        		
+        		
+        		entityName = $("#entityName");
+        		name = $("#name");
+        		developer = $("#developer");
+        		entityId = $("#entityId");
+        		
+        		$("#update").click(updateEntity);
+        		$("#delete").click(deleteEntity);
+        		
+        	});
+        	
+	        
+        	function updateEntityDetails(id) {
+        		$.ajax({
+        			"url" : "rest/application/"+id,
+        			"success" : function(entity) {
+        				$("#name").val(entity.name);
+        				entityId.val(entity.id);
+        				$("#developer").html(entity.developer.firstName);
+   
+        			}
+        		});
+        	}
+        	
+        	function updateEntity() {
+        		var entity = {
+           			"name"	: $("#name").val(),
+        			"id"	: entityId.val()
+        		};
+        		$.ajax({
+        			"url" : "rest/application",
+        			"data" : JSON.stringify(entity),
+        		    "contentType" : "application/json; charset=utf-8",
+        	        "dataType" : "json",
+        			"type" : "POST",
+        			"success" : function(entities) {
+        				console.log(entities);
+        			}
+        		});
+        	}
+        	
+        	function deleteEntity() {
+        		var id = entityEmail.val();
+        		$.ajax({
+        			"url" : "rest/application/"+id,
+        			"type" : "DELETE",
+        			"success" : function(entities) {
+        				window.location.href = "applicationList.html";
+        			},
+        			"error" : function(err) {
+        				console.log(err);
+        			}
+        		});
+        	}
+        </script>
+	</head>
+	<body>
+    	<a href="applicationList.html">Applications</a>
+	
+		<h1>Application Details</h1>
+		
+		<h2>Application</h2>
+		
+		Name: <input id="name"/><br/>
+		Developer: <span id="developer"></span><br/>
+		<input type="hidden" id="entityId"/>
+		<a href="#" id="update">Update</a> <a href="#" id="delete">Delete</a>
 
-        <form method="POST" action="editApp.html" name="appForm">
-            Name:	<c:out value="${application.name}"/><br/>
-            <input type="hidden" name="deleteId" value="${application.id}" />
-            <input type="submit" value="Delete" />
-            <select name="appFlowList">
-            <c:forEach var="appFlow" items="${application.flows}">
-            <option value="${appFlow.id}">${appFlow.name}</option> 
-            </c:forEach>
-            </select>
-        </form>        <hr>
-        
-        <h2>Applications</h2>
-
-		<form action="addFlow.html" method="POST">
-			<select name="flowId">
-			<c:forEach items="${flows}" var="flow">
-			<option value="${flow.id}">${flow.name}</option>
-			</c:forEach>
-			</select>
-			<input type="submit" value="Add Flow"/>
-		</form>
-        <ol>
-</ol><hr>
-      </body>
+		<hr/>
+		
+		
+	</body>
  </html>

@@ -51,7 +51,7 @@
 	        	var entity = li.data("entity");
 	        	var id = entity.id;
 	        	$.ajax({
-	        		"url" : "rest/developer/"+entity.id,
+	        		"url" : "rest/developer/"+entity.email,
 	        		"type" : "DELETE",
 	        		"success" : function(entities) {
 	        			renderEntityList(entities);
@@ -75,6 +75,8 @@
 	        	var detailsLink = $(this);
 	        	var li = detailsLink.parents("li");
 	        	var entity = li.data("entity");
+	        	alert(''+entity.email);
+	        	//alert('name--'+enitiy.firstName);
 	        	window.location.href = "developerDetails.html?entityId="+entity.email;
 	        }
 	        

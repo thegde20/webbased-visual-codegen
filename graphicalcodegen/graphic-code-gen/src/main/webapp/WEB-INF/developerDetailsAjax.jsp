@@ -31,6 +31,7 @@
         		firstName = $("#firstName");
         		lastName = $("#lastName");
         		entityId = $("#entityId");
+        		entityEmail= $("#entityEmail");
         		
         		$("#update").click(updateEntity);
         		$("#delete").click(deleteEntity);
@@ -46,17 +47,20 @@
         			"success" : function(entity) {
         				firstName.val(entity.firstName);
         				lastName.val(entity.lastName);
-        				email.val(entity.email);
-        				entityId.val(entity.email);
+        				//email.val(entity.email);
+        				$("#entityEmailShow").html(entity.email);
+        				//entityEmail.data=entity.email;
+        				entityEmail.val(entity.email);
         			}
         		});
         	}
         	
         	function updateEntity() {
+        		alert('update entity'+$("#entityEmail").val());
         		var entity = {
            			"firstName"	: firstName.val(),
            			"lastName"	: lastName.val(),
-        			"id"	: parseInt(entityId.val())
+        			"email"	: $("#entityEmail").val()
         		};
         		$.ajax({
         			"url" : "rest/developer",
@@ -71,7 +75,7 @@
         	}
         	
         	function deleteEntity() {
-        		var id = entityId.val();
+        		var id = entityEmail.val();
         		$.ajax({
         			"url" : "rest/developer/"+id,
         			"type" : "DELETE",
@@ -86,8 +90,8 @@
         </script>
 	</head>
 	<body>
-    	<a href="applicationListAjax.html">Applications</a>
-    	<a href="developerListAjax.html">Developers</a>
+    	<a href="applicationList.html">Applications</a>
+    	<a href="developer.html">Developers</a>
 	
 		<h1>Developer Details</h1>
 		
@@ -95,17 +99,11 @@
 		
 		First Name: <input id="firstName"/><br/>
 		Last Name: <input id="lastName"/><br/>
-		Email: <c:out value="" id="email" /><br/>
-		<input type="hidden" id="entityId"/>
+		Email: <span id="entityEmailShow"></span><br/>
+		<input type="hidden" id="entityEmail"/>
 		<a href="#" id="update">Update</a> <a href="#" id="delete">Delete</a>
 
 		<hr/>
-	<h2>Applications</h2>
-		Application:
-		<select id="applicationSelect">
-			<option value="applicationId">APPLICATION NAME</option>
-		</select>
-		<a href="" id="addApplication">Add</a><br/>
 		
 		
 	</body>
