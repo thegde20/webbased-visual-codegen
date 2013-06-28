@@ -30,7 +30,7 @@ public class FlowService {
 		String  desc= request.getParameter("desc");
 		String appId = request.getParameter("application");
 
-		Application app = appDao.getApplication(appId);
+		Application app = appDao.getApplication(Integer.parseInt(appId));
 		Flow f = new Flow(name, desc,app,new ArrayList<Node>());
 		flowDao.persist(f);
 //		app.getFlows().add(f);

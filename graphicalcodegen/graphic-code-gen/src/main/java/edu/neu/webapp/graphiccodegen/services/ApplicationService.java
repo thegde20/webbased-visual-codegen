@@ -23,31 +23,21 @@ public class ApplicationService {
 	@Autowired
 	private FlowDao flowDao;
 
-	public void addApplicationService(ModelMap model, HttpServletRequest request) {
-		String name = request.getParameter("name");
-		String devEmail = request.getParameter("developer");
-		Developer devRequested = devDao.getDeveloper(devEmail);
-
-		Application newapp = new Application(name, devRequested);
-		appDao.persist(newapp);
-		devRequested.addApplication(newapp);
+	public List<Application> addApplicationService(String name,String email) {
+		Developer devRequested = devDao.getDeveloper(email);
+		Application app = new Application(name,devRequested);
+		appDao.persist(app);
 		List<Application> allApps = appDao.getAllApplications();
-		model.put("apps", allApps);
-
-		List<Developer> allDevelopers = devDao.getAllDevelopers();
-		model.put("developers", allDevelopers);
+		 return allApps;
 
 	}
+	
 
-	public void getAllDataService(ModelMap model, HttpServletRequest request) {
+	public List<Application>  getAllDataService() {
 
 		List<Application> allApps = appDao.getAllApplications();
 		getFlowsForApps(allApps);
-		model.put("apps", allApps);
-
-		List<Developer> allDevelopers = devDao.getAllDevelopers();
-		//getAppsForDeveloper(allDevelopers);
-		model.put("developers", allDevelopers);
+		return allApps;
 		
 	}
 	
@@ -60,26 +50,28 @@ public class ApplicationService {
 		}
 	
 	}
-	public void deleteDeveloperService(ModelMap model, HttpServletRequest request) {
-		String appId = request.getParameter("deleteId");
+	public List<Application> deleteApplicationService(String appId) {
 		appDao.deleteById(appId);
 		List<Application> allApps = appDao.getAllApplications();
 		getFlowsForApps(allApps);
-		model.put("apps", allApps);
-		List<Developer> allDevelopers = devDao.getAllDevelopers();
-		
-		model.put("developers", allDevelopers);
+		return allApps;
 
 	}
 	
-	public void detailsDeveloperService(ModelMap model, HttpServletRequest request) {
-		String appId = request.getParameter("detailId");
+	public Application detailsApplicationService(int appId) {
 		Application appRequested = appDao.getApplication(appId);
 		
-		List<Flow> allFlows = flowDao.getAllFlows();
-		model.put("flows", allFlows);
+		
 		appRequested.setFlows(appDao.getFlowsForApplication(appRequested.getId()));
-		model.put("application", appRequested);
+		//model.put("application", appRequested);
+		return appRequested;
 
+	}
+	public List<Application> updateApplicationService(Application a){
+		appDao.updateApplication(a.getName(),a.getId());
+		
+		List<Application> allApps = appDao.getAllApplications();
+		getFlowsForApps(allApps);
+		return allApps;
 	}
 }
