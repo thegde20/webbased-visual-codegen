@@ -8,6 +8,7 @@ import org.springframework.ui.ModelMap;
 import edu.neu.webapp.graphiccodegen.dao.BranchDao;
 import edu.neu.webapp.graphiccodegen.dao.DataDao;
 import edu.neu.webapp.graphiccodegen.dao.NumberOperationDao;
+import edu.neu.webapp.graphiccodegen.dao.OperationDao;
 import edu.neu.webapp.graphiccodegen.dao.OperationTypeDao;
 import edu.neu.webapp.graphiccodegen.dao.ScriptDao;
 import edu.neu.webapp.graphiccodegen.dao.StatementDao;
@@ -16,6 +17,7 @@ import edu.neu.webapp.graphiccodegen.dao.StringOperationDao;
 import edu.neu.webapp.graphiccodegen.entities.Branch;
 import edu.neu.webapp.graphiccodegen.entities.Data;
 import edu.neu.webapp.graphiccodegen.entities.NumberOperation;
+import edu.neu.webapp.graphiccodegen.entities.Operation;
 import edu.neu.webapp.graphiccodegen.entities.OperationType;
 import edu.neu.webapp.graphiccodegen.entities.Script;
 import edu.neu.webapp.graphiccodegen.entities.Statement;
@@ -48,6 +50,9 @@ public class CodeGenUtils {
 	@Autowired
 	private BranchDao branchDao;
 	
+	@Autowired
+	private OperationDao operationDao;
+	
 	public void renderPageValues(ModelMap model){
 
 		String scriptName = String.valueOf(model.get("sessionScriptName"));
@@ -72,6 +77,10 @@ public class CodeGenUtils {
 
 		List<Statement> statements = statementDao.getAllStatements(scriptName);
 		model.put("statements", statements);
+		
+		List<Operation> operations = operationDao.getAllOperationStatements(scriptName);
+		model.put("operations", operations);
+		
 
 	}
 	

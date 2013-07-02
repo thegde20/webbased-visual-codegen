@@ -39,9 +39,10 @@ public class OperationDao {
 	}
 	
 	// Retrieves all the Statements:
-	public List<Operation> getAllOperationStatements() {
+	public List<Operation> getAllOperationStatements(String scriptName) {
 		
-		TypedQuery<Operation> query = em.createQuery("SELECT o FROM Operation o ORDER BY o.statementId", Operation.class);
+		TypedQuery<Operation> query = em.createQuery("SELECT o FROM Operation o WHERE o.script.scriptName=:operationScript ORDER BY o.statementId", Operation.class)
+				.setParameter("operationScript", scriptName);
 		return query.getResultList();
 	}
 
