@@ -21,6 +21,9 @@
 		<tr>
 			<td><a href="scriptMain.html">Scripts</a></td>
 		</tr>
+		<tr>
+			<td><a href="developer.html">Developer</a></td>
+		</tr>
 	</table>
 </body>
 </html>

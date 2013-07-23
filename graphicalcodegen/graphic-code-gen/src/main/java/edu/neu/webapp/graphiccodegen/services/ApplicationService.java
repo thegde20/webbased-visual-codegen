@@ -2,10 +2,7 @@ package edu.neu.webapp.graphiccodegen.services;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
 
 import edu.neu.webapp.graphiccodegen.dao.ApplicationDao;
 import edu.neu.webapp.graphiccodegen.dao.DeveloperDao;
@@ -61,8 +58,10 @@ public class ApplicationService {
 	public Application detailsApplicationService(int appId) {
 		Application appRequested = appDao.getApplication(appId);
 		
+		if(appRequested != null){
+			appRequested.setFlows(appDao.getFlowsForApplication(appRequested.getId()));
+		}
 		
-		appRequested.setFlows(appDao.getFlowsForApplication(appRequested.getId()));
 		//model.put("application", appRequested);
 		return appRequested;
 

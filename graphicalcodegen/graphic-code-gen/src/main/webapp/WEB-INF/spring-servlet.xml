@@ -59,10 +59,31 @@
 <bean name="/applicationList.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  
     <property name="viewName" value="applicationList"/>  
 </bean>  
-
 <bean name="/applicationDetails.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  
     <property name="viewName" value="applicationDetails"/>  
 </bean>  
+<bean name="/flowList.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  
+    <property name="viewName" value="flowList"/>  
+</bean>
+  
+<bean name="/flowDetails.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  
+    <property name="viewName" value="flowDetails"/>  
+</bean> 
+<bean name="/nodeList.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  
+    <property name="viewName" value="nodeList"/>  
+</bean>
+  
+<bean name="/nodeDetails.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  
+    <property name="viewName" value="nodeDetails"/>  
+</bean> 
+<bean name="/eventList.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  
+    <property name="viewName" value="eventList"/>  
+</bean>
+  
+<bean name="/eventDetails.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  
+    <property name="viewName" value="eventDetails"/>  
+</bean> 
+ 
 	<bean id="codeGenUtils" class="edu.neu.webapp.graphiccodegen.services.CodeGenUtils"> </bean>
 	<bean id="dataService" class="edu.neu.webapp.graphiccodegen.services.DataService"> </bean>
 	<bean id="operationService" class="edu.neu.webapp.graphiccodegen.services.OperationService"> </bean>
