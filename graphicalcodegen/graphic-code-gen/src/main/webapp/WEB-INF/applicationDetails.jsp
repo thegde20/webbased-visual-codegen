@@ -77,7 +77,6 @@
 	</head>
 	<body>
     	<a href="applicationList.html">Applications</a>
-    	<a href="flowList.html">Flows</a>
 	
 		<h1>Application Details</h1>
 		
