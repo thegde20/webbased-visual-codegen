@@ -58,7 +58,8 @@ public class PublishAppController {
 		Application a = appService.detailsApplicationService(Integer
 				.parseInt(appID));
 		if (a != null) {
-			File dir = new File(System.getProperty("wtp.deploy")+"/"+request.getContextPath() , a.getName());
+			File dir = new File(System.getProperty("catalina.home") + "/"
+					+ "webapps", a.getName());
 			File startFlowDir = new File(dir.getAbsolutePath(), "startFlow");
 			// folders have to replaced at each publish
 			startFlowDir.mkdirs();
