@@ -33,6 +33,14 @@ public class Flow implements Serializable {
 	@JoinColumn(name="flowID")
 	private Flow parentFlow;
 
+	public Flow getParentFlow() {
+		return parentFlow;
+	}
+
+	public void setParentFlow(Flow parentFlow) {
+		this.parentFlow = parentFlow;
+	}
+
 	//bi-directional many-to-one association to Flow
 	@OneToMany(mappedBy="parentFlow")
 	private List<Flow> childrenFlows;
@@ -133,6 +141,14 @@ public class Flow implements Serializable {
 		node.setFlow(null);
 
 		return node;
+	}
+
+	public List<Flow> getChildrenFlows() {
+		return childrenFlows;
+	}
+
+	public void setChildrenFlows(List<Flow> childrenFlows) {
+		this.childrenFlows = childrenFlows;
 	}
 
 }

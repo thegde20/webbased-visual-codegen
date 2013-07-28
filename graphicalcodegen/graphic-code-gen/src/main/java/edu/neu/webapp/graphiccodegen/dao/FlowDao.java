@@ -52,5 +52,11 @@ public class FlowDao {
 		return query.getResultList();
 	
 	}
+	public List<Flow> getSubFlows(int parentFlowId){
+		TypedQuery<Flow> query = em.createQuery(
+				"SELECT d FROM Flow d where d.parentFlow.id=:id", Flow.class);
+		query.setParameter("id", parentFlowId);
+		return query.getResultList();
+	}
 
 }

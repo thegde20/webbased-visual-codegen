@@ -82,4 +82,12 @@ public class FlowService {
 		}
 
 	}
+	
+	public void getSubFlows(List<Flow> allFlows){
+		if(allFlows != null && allFlows.size() != 0){
+			for(Flow f: allFlows){
+				f.setChildrenFlows(flowDao.getSubFlows(f.getId()));
+			}
+		}
+	}
 }
