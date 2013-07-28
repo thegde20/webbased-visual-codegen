@@ -21,10 +21,8 @@
 	<context:component-scan base-package="edu.neu.webapp.graphiccodegen.dao" />
 	<context:component-scan base-package="edu.neu.webapp.graphiccodegen.entities" />
 	<context:component-scan base-package="edu.neu.webapp.graphiccodegen.services" />
-	
 	<!-- Use @Controller annotations for MVC controller definitions -->
 	<mvc:annotation-driven />
-
 	<!-- Add JPA support -->
 	<bean id="emf"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -49,6 +47,14 @@
 			<value>.jsp</value>
 		</property>
 	</bean>
+	<bean id="myProperties"
+      class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+  <property name="locations">
+    <list>
+      <value>/WEB-INF/config.properties</value>
+    </list>
+  </property>
+</bean>
 	<bean name="/developer.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  
     <property name="viewName" value="developerAjax"/>  
 </bean>
@@ -83,7 +89,6 @@
 <bean name="/eventDetails.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  
     <property name="viewName" value="eventDetails"/>  
 </bean> 
- 
 	<bean id="codeGenUtils" class="edu.neu.webapp.graphiccodegen.services.CodeGenUtils"> </bean>
 	<bean id="dataService" class="edu.neu.webapp.graphiccodegen.services.DataService"> </bean>
 	<bean id="operationService" class="edu.neu.webapp.graphiccodegen.services.OperationService"> </bean>
@@ -95,4 +100,5 @@
 	<bean id="flowService" class="edu.neu.webapp.graphiccodegen.services.FlowService"> </bean>
 	<bean id="nodeService" class="edu.neu.webapp.graphiccodegen.services.NodeService"> </bean>
 	<bean id="eventService" class="edu.neu.webapp.graphiccodegen.services.EventService"> </bean>
+	<bean id="publishAppService" class="edu.neu.webapp.graphiccodegen.services.PublishAppService"> </bean>
 </beans>
