@@ -65,9 +65,6 @@
 	        function getAllEntitiesService(callback) {
 	        	$.ajax({
 	        		"url" : "rest/developer/getDevelopers",
-	        		"type" : "GET",
-        		    "contentType" : "application/json; charset=utf-8",
-        	        "dataType" : "json",
 	        		"success" : function(entities) {
 	        			callback(entities);
 	        		}
@@ -78,7 +75,7 @@
 	        	var detailsLink = $(this);
 	        	var li = detailsLink.parents("li");
 	        	var entity = li.data("entity");
-	        	//alert(''+entity.email);
+	        	alert(''+entity.email);
 	        	//alert('name--'+enitiy.firstName);
 	        	window.location.href = "developerDetails.html?entityId="+entity.email;
 	        }
@@ -104,7 +101,7 @@
     </head>
  
     <body>
-    	<a href="applicationList.html">Applications</a>
+    	<a href="applicationListAjax.html">Applications</a>
   
     	
     	<h1>Developers</h1>

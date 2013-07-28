@@ -65,21 +65,14 @@
        				var entity = entities[i];
        				entityListItem = entityListItemTemplate.clone();
        				entityListItem.find(".entityName").html(entity.name);
-       				entityListItem.find(".appIdClass").attr("value",entity.id);
        				entityListItem.data("entity", entity);
        				//entityListItem.
        				entityList.append(entityListItem);
        			}
        			$(".entityDetailsLink").on("click", navigateToEntityDetails);
        			$(".deleteLink").on("click", deleteEntity);
-       			$(".publishLink").on("click", publishApp);
-       			//var deleteLink = $(this);
-	        	//var li = deleteLink.parents("li");
-	        	//var entity = li.data("entity");
-       			
-       			//$(".runLink").on("click", runLink);
 	        }
-	      
+	        
 	        function deleteEntity() {
 	        	var deleteLink = $(this);
 	        	var li = deleteLink.parents("li");
@@ -90,23 +83,6 @@
 	        		"type" : "DELETE",
 	        		"success" : function(entities) {
 	        			renderEntityList(entities);
-        			},
-        			"error" : function(err) {
-        				console.log(err);
-        			}
-	        	});
-	        }
-	        function publishApp() {
-	        	var deleteLink = $(this);
-	        	var li = deleteLink.parents("li");
-	        	var entity = li.data("entity");
-	        	//var id = entity.id;
-	        	$.ajax({
-	        		"url" : "rest/publish/"+entity.id,
-	        		"type" : "GET",
-	        		"success" : function(entities) {
-	        			//renderEntityList(entities);
-	        			alert('published');
         			},
         			"error" : function(err) {
         				console.log(err);
@@ -128,13 +104,6 @@
 	        	var li = detailsLink.parents("li");
 	        	var entity = li.data("entity");
 	        	window.location.href = "applicationDetails.html?entityId="+entity.id;
-	        }
-	        function runLink() {
-	        	var runLink = $(this);
-	        	var li = runLink.parents("li");
-	        	var entity = li.data("entity");
-	        	alert('entity.id'+entity.id);
-	        	window.location.href = "runApp.html?appId="+entity.id;
 	        }
 	        
 	        function createEntity() {
@@ -175,12 +144,6 @@
 				<span class="entityName"></span>
 				<a href="#" class="entityDetailsLink">Details</a>
 				<a href="#" class="deleteLink">Delete</a>
-				<a href="#" class="publishLink">Publish</a>
-				<form action="runApp.html" name="runApp">
-				<input type="hidden" name="appId" class="appIdClass">
-				<input type="submit" name="Run" value="RUN">
-				<!-- <a href="runApp.html" class="runLink">Run</a> -->
-				</form>
 			</li>
 		</ol>
 		

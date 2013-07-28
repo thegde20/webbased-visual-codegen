@@ -1,157 +1,70 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-
+    pageEncoding="ISO-8859-1"%>
+ 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
-
+ 
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Applications</title>
-<script src="js/jquery-min.js"></script>
-<script>
-	var entityList;
-	var entityListItemTemplate = null;
-	var flowSelect, flowOptionTemplate;
-	$(function() {
-		entityList = $("#entityList");
-		entityListItemTemplate = $("#entityList li").clone();
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <title>Node List</title>
+    </head>
+ 
+    <body>
+    	<a href="mainmenu.html">Main Menu</a>
+    	
+    	<h1>Nodes</h1>
 
-		updateEntityList();
+    	<h2>Create New Node</h2>
 
-		flowSelect = $("#flowSelect");
-		flowOptionTemplate = $("#flowSelect option").clone();
-
-		$("#createEntityLink").click(createEntity);
-		getAllFlows(renderFlowOptions);
-	});
-
-	function updateEntityList(entities) {
-		if (entities == null || typeof entities == "undefined")
-			getAllEntitiesService(renderEntityList);
-		else
-			renderEntityList(entities);
-	}
-	function getAllFlows(callback) {
-		$.ajax({
-			"url" : "rest/flow/getFlows",
-			"success" : function(entities) {
-				callback(entities);
-			}
-		});
-	}
-	function renderFlowOptions(entities) {
-		flowSelect.empty();
-		var entityOption;
-		for ( var i in entities) {
-			var entity = entities[i];
-			entityOption = flowOptionTemplate.clone();
-			entityOption.html(entity.name);
-			entityOption.attr("value", entity.id);
-			flowSelect.append(entityOption);
-		}
-	}
-
-	function renderEntityList(entities) {
-		entityList.empty();
-		var entityListItem;
-		for ( var i in entities) {
-			var entity = entities[i];
-			entityListItem = entityListItemTemplate.clone();
-			entityListItem.find(".entityName").html(entity.name+" "+entity.type+" "+entity.flow.name);
-			entityListItem.data("entity", entity);
-			//entityListItem.
-			entityList.append(entityListItem);
-		}
-		$(".entityDetailsLink").on("click", navigateToEntityDetails);
-		$(".deleteLink").on("click", deleteEntity);
-	}
-
-	function deleteEntity() {
-		var deleteLink = $(this);
-		var li = deleteLink.parents("li");
-		var entity = li.data("entity");
-		var id = entity.id;
-		$.ajax({
-			"url" : "rest/node/" + entity.id,
-			"type" : "DELETE",
-			"success" : function(entities) {
-				renderEntityList(entities);
-			},
-			"error" : function(err) {
-				console.log(err);
-			}
-		});
-	}
-
-	function getAllEntitiesService(callback) {
-		$.ajax({
-			"url" : "rest/node/getNodes",
-			"type" : "GET",
-			"dataType" : "json",
-			"success" : function(entities) {
-				callback(entities);
-			}
-		});
-	}
-
-	function navigateToEntityDetails() {
-		var detailsLink = $(this);
-		var li = detailsLink.parents("li");
-		var entity = li.data("entity");
-		window.location.href = "nodeDetails.html?entityId=" + entity.id;
-	}
-
-	function createEntity() {
-		var name = $("#entityName").val();
-		var type = $("#entityType").val();
-		$.ajax({
-			"url" : "rest/node/addNode/" + name + "/" + type + "/"+ flowSelect.val(),
-			"type" : "POST",
-			"success" : function(entities) {
-				updateEntityList(entities);
-			}
-		});
-	}
-</script>
-</head>
-
-<body>
-	<a href="flowList.html">Flows</a>
-
-
-	<h1>Nodes</h1>
-
-	<h2>Create New Node</h2>
-
-	Node Name:
-	<input type="text" name="name" id="entityName" />
-	<br /> Node Type:
-	<select id="entityType">
-		<option value="IO">IO</option>
-		<option value="Form">Form</option>
-		<option value="DB">DB</option>
-	</select>
-	<br />
-	<h2>Flows</h2>
-	Flow:
-	<select id="flowSelect">
-		<option value="flowId">Flow NAME</option>
-	</select>
-	<a href="#" id="createEntityLink">Create</a>
-
-	<hr>
-
-	<h2>Existing Nodes</h2>
-
-	<ol id="entityList">
-		<li><span class="entityName"></span>
-		<a href="#" class="entityDetailsLink">Details</a>
-		 <a href="#"
-			class="deleteLink">Delete</a></li>
-	</ol>
-
-</body>
-</html>
+        <form method="POST" action="addNode.html" name="nodeForm">
+<table>
+			<tr>
+				<td>Name:</td>
+				<td><input type="text" name="name" /></td>
+			</tr>
+			<tr>
+				<td>Flow:</td>
+				<td><select name="flow">
+				<c:forEach var="fl" items="${allFLows}">
+				<option value="${fl.id}">${fl.name}</option>
+				</c:forEach>
+				</select>
+				<select name="type">
+				<option value="IO">IO</option>
+				<option value="Form">Form</option>
+				<option value="Display">Display</option></select>
+				</td>
+			</tr>
+			<tr>
+				<td><input type="submit" value="Add" /></td>
+			</tr>
+		</table>
+      </form>
+ 
+        <hr>
+		<h2>Existing Nodes</h2>
+<hr>
+<table border="" cellspacing="4" cellpadding="4">
+		<tr>
+			<th>Name</th>
+			<th>Flow</th>
+		</tr>
+		<c:forEach var="nd" items="${allNodes}">
+			<tr>
+			<td>${nd.name}</td>
+				<td>${nd.flow.name}</td>
+			</tr>
+			<form method="POST" action="editNode.html">
+			<tr>
+				<td>
+				<input type="hidden" name="detailId" value="${nd.id}" />
+				<input type="submit" value="Edit" /></td>
+			</tr>
+			</form>
+		</c:forEach>
+	</table>
+      </body>
+ </html>
