@@ -1,9 +1,8 @@
 package edu.neu.webapp.graphiccodegen.services;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
 
 import edu.neu.webapp.graphiccodegen.dao.EventDao;
 import edu.neu.webapp.graphiccodegen.dao.NodeDao;
@@ -17,39 +16,40 @@ public class EventService {
 	@Autowired
 	private NodeDao nodeDao;
 
-	public void addEventService(ModelMap model, HttpServletRequest request) {
-		String label = request.getParameter("label");
-		String nodeSource = request.getParameter("nodeSource");
-		String nodeTarget = request.getParameter("nodeTarget");
+	public List<Event> addEventService(String label, int nodeSource,
+			int nodeTarget) {
 
 		Node nodeSrc = nodeDao.getNode(nodeSource);
 		Node nodeTgt = nodeDao.getNode(nodeTarget);
 		eventDao.persist(new Event(label, nodeSrc, nodeTgt));
 
-		model.put("allEvents", eventDao.getAllEvents());
-		model.put("allNodes", nodeDao.getAllNodes());
+		List<Event> events = eventDao.getAllEvents();
+		return events;
+	}
+
+	public List<Event> getAllDataService() {
+
+		List<Event> events = eventDao.getAllEvents();
+		return events;
 
 	}
 
-	public void getAllDataService(ModelMap model, HttpServletRequest request) {
+	public List<Event> deleteEventService(String id) {
 
-		model.put("allNodes", nodeDao.getAllNodes());
-		model.put("allEvents", eventDao.getAllEvents());
-
-	}
-
-	public void deleteEventService(ModelMap model, HttpServletRequest request) {
-
-		String id = request.getParameter("deleteId");
 		eventDao.deleteById(id);
-		model.put("allEvents", eventDao.getAllEvents());
+		List<Event> events = eventDao.getAllEvents();
+		return events;
 
 	}
 
-	public void detailsEventService(ModelMap model, HttpServletRequest request) {
-		String id = request.getParameter("detailId");
+	public Event detailsEventService(String id) {
 		Event evt = eventDao.getEvent(id);
-		model.put("event", evt);
+		return evt;
+	}
+	public List<Event> updateEventService(Event evt){
+		eventDao.updateEvent(evt.getLabel(),evt.getNodeSource(),evt.getNodeTarget(),evt.getId());		
+		List<Event> events = eventDao.getAllEvents();
+		return events;
 	}
 
 }

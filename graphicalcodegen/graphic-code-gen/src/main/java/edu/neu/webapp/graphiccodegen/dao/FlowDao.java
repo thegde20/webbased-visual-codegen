@@ -26,8 +26,8 @@ public class FlowDao {
 	}
 
 	// Returns a Developer object whose email is = value of email
-	public Flow getFlow(String id) {
-		Flow fl = em.find(Flow.class, Integer.parseInt(id));
+	public Flow getFlow(int id) {
+		Flow fl = em.find(Flow.class, id);
 		return fl;
 	}
 
@@ -50,7 +50,15 @@ public class FlowDao {
 				"SELECT a FROM Node a where a.flow.id=:id", Node.class);
 		query.setParameter("id", id);
 		return query.getResultList();
-	
+
+	}
+	@Transactional
+	public void updateFlow(String name,String desc,int id){
+		Flow flow = em.find(Flow.class, id);
+		if(flow != null){
+			flow.setName(name);
+			flow.setDescription(desc);
+		}
 	}
 	public List<Flow> getSubFlows(int parentFlowId){
 		TypedQuery<Flow> query = em.createQuery(
@@ -58,5 +66,4 @@ public class FlowDao {
 		query.setParameter("id", parentFlowId);
 		return query.getResultList();
 	}
-
 }

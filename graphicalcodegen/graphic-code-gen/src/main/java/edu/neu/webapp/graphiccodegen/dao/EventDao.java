@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.neu.webapp.graphiccodegen.entities.Event;
+import edu.neu.webapp.graphiccodegen.entities.Node;
 
 @Component
 public class EventDao {
@@ -45,12 +46,21 @@ public class EventDao {
 			em.remove(evt);
 		}
 	}
-	
-	@Transactional
+
+
 	public List<Event> getEventBySourceNode(int i){
 		TypedQuery<Event> query = em.createQuery("select e from Event e where e.nodeSource.id = :id", Event.class);
 		query.setParameter("id", i);
 		return query.getResultList();
+	}
+	@Transactional
+	public void updateEvent(String label,Node ndSrc,Node ndTgt,int id){
+		Event evt = em.find(Event.class, id);
+		if(evt!= null){
+			evt.setLabel(label);
+			evt.setNodeSource(ndSrc);
+			evt.setNodeTarget(ndTgt);
+		}
 	}
 
 

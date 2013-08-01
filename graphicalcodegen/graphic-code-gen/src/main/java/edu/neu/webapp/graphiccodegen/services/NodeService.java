@@ -2,10 +2,7 @@ package edu.neu.webapp.graphiccodegen.services;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
 
 import edu.neu.webapp.graphiccodegen.dao.FlowDao;
 import edu.neu.webapp.graphiccodegen.dao.NodeDao;
@@ -19,10 +16,7 @@ public class NodeService {
 	@Autowired
 	private NodeDao nodeDao;
 
-	public void addNodeService(ModelMap model, HttpServletRequest request) {
-		String name = request.getParameter("name");
-		String flowId = request.getParameter("flow");
-		String type = request.getParameter("type");
+	public List<Node> addNodeService(String name,String type,int flowId) {
 
 		Flow flowReq = flowDao.getFlow(flowId);
 		nodeDao.persist(new Node(name, flowReq, type));
@@ -30,44 +24,44 @@ public class NodeService {
 		List<Node> ndList = nodeDao.getAllNodes();
 		getSourceNodesForFlow(ndList);
 		getTargetNodesForFlow(ndList);
-		model.put("allNodes", ndList);
-		model.put("allFLows", flowDao.getAllFlows());
+		return ndList;
 
 	}
 
-	public void getAllDataService(ModelMap model, HttpServletRequest request) {
+	public List<Node> getAllDataService() {
 
 		List<Node> ndList = nodeDao.getAllNodes();
 		getSourceNodesForFlow(ndList);
 		getTargetNodesForFlow(ndList);
-		model.put("allNodes", ndList);
-		model.put("allFLows", flowDao.getAllFlows());
+		return ndList;
 
 	}
 
-	public void deleteNodeService(ModelMap model, HttpServletRequest request) {
+	public List<Node> deleteNodeService(String id) {
 
-		String id = request.getParameter("deleteId");
 		nodeDao.deleteById(id);
 		List<Node> ndList = nodeDao.getAllNodes();
 		getSourceNodesForFlow(ndList);
 		getTargetNodesForFlow(ndList);
-		model.put("allNodes", ndList);
-		model.put("allFLows", flowDao.getAllFlows());
+		return ndList;
 
 	}
 
-	public void detailsNodeService(ModelMap model, HttpServletRequest request) {
-		String id = request.getParameter("detailId");
-
+	public Node detailsNodeService(int id) {
 		Node nd = nodeDao.getNode(id);
 		// model.put("allNodes", value)
 		nd.setSourceEvent(nodeDao.getSourceEventsForNode(nd.getId()));
 		nd.setTargetEvent(nodeDao.getTargetEventsForNode(nd.getId()));
-		model.put("node", nd);
-
+		return nd;
 	}
 
+	public List<Node> updateNodeService(Node nd){
+		nodeDao.updateNode(nd.getName(), nd.getType(),nd.getId());		
+		List<Node> ndList = nodeDao.getAllNodes();
+		getSourceNodesForFlow(ndList);
+		getTargetNodesForFlow(ndList);
+		return ndList;
+	}
 	public void getSourceNodesForFlow(List<Node> allNodes) {
 		if (allNodes != null) {
 			for (Node nd : allNodes) {
@@ -76,7 +70,6 @@ public class NodeService {
 		}
 
 	}
-
 	public void getTargetNodesForFlow(List<Node> allNodes) {
 		if (allNodes != null) {
 			for (Node nd : allNodes) {
@@ -85,5 +78,4 @@ public class NodeService {
 		}
 
 	}
-
 }

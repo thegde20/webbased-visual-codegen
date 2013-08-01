@@ -101,7 +101,7 @@
     </head>
  
     <body>
-    	<a href="applicationListAjax.html">Applications</a>
+    	<a href="applicationList.html">Applications</a>
   
     	
     	<h1>Developers</h1>

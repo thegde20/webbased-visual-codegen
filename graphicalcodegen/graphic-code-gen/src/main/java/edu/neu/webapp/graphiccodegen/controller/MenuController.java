@@ -12,7 +12,17 @@ public class MenuController {
     @RequestMapping(value="/mainmenu")
     public String mainmenu(ModelMap model, HttpServletRequest request) {
 		
-    	return "mainmenu";
+    	return "DemoFile";
+    }
+    @RequestMapping(value="/userApplication")
+    public String userApplication(ModelMap model, HttpServletRequest request) {
+		
+    	return "userApplication";
+    }
+    @RequestMapping(value="/userFlow")
+    public String userFlow(ModelMap model, HttpServletRequest request) {
+		
+    	return "userFlow";
     }
     
     
