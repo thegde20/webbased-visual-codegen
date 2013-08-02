@@ -70,5 +70,14 @@ public class FlowController {
 		List<Flow> allFlows = flowService.updateFlowService(updatedFlow);
 		return allFlows;
 	}
+	@GET
+	@Path("/getFlowForApp/{appId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Flow> readFlowForApp(@PathParam("appId") int appId) {
+
+		List<Flow> flows = flowService.getAllFlowForApplication(appId);
+		return flows;
+
+	}
 
 }

@@ -78,4 +78,8 @@ public class NodeService {
 		}
 
 	}
+	public List<Node> getNodesForFlow(int id) {
+		List<Node> nodes = flowDao.getNodesForFlow(id);
+		return nodes;
+		}
 }

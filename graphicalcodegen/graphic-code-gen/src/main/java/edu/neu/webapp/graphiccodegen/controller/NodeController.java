@@ -69,4 +69,11 @@ public class NodeController {
 		List<Node> allNodes = nodeService.updateNodeService(updatedNode);
 		return allNodes;
 	}
+	@GET
+	@Path("/getNodesForFlow/{flowId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Node> getNodesForFlow(@PathParam("flowId") int id) {
+		List<Node> allNodes= nodeService.getNodesForFlow(id);
+		return allNodes;
+	}
 }

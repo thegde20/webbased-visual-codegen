@@ -53,7 +53,7 @@
     <property name="viewName" value="developerAjax"/>  
 </bean>
 <bean name="/developerDetails.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  
-    <property name="viewName" value="developerDetailsAjax"/>  
+    <property name="viewName" value="developerDetails"/>  
 </bean>  
 
 <bean name="/applicationList.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  

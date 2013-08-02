@@ -14,13 +14,13 @@
         <script>
 	    	var entityList;
 	        var entityListItemTemplate = null;
-	        
+
 	        $(function(){
 	        	entityList = $("#entityList");
 	        	entityListItemTemplate = $("#entityList li").clone();
 
 	        	updateEntityList();
-	        	
+
 	        	$("#createEntityLink").click(createEntity);
 	        });
 
@@ -30,7 +30,7 @@
 	        	else
 	        		renderEntityList(entities);
 	        }
-	        
+
 	        function renderEntityList(entities) {
        			entityList.empty();
        			var entityListItem;
@@ -44,7 +44,7 @@
        			$(".entityDetailsLink").on("click", navigateToEntityDetails);
        			$(".deleteLink").on("click", deleteEntity);
 	        }
-	        
+
 	        function deleteEntity() {
 	        	var deleteLink = $(this);
 	        	var li = deleteLink.parents("li");
@@ -61,10 +61,13 @@
         			}
 	        	});
 	        }
-	        
+
 	        function getAllEntitiesService(callback) {
 	        	$.ajax({
 	        		"url" : "rest/developer/getDevelopers",
+	        		"type" : "GET",
+        		    "contentType" : "application/json; charset=utf-8",
+        	        "dataType" : "json",
 	        		"success" : function(entities) {
 	        			callback(entities);
 	        		}
@@ -75,11 +78,11 @@
 	        	var detailsLink = $(this);
 	        	var li = detailsLink.parents("li");
 	        	var entity = li.data("entity");
-	        	alert(''+entity.email);
+	        	//alert(''+entity.email);
 	        	//alert('name--'+enitiy.firstName);
 	        	window.location.href = "developerDetails.html?entityId="+entity.email;
 	        }
-	        
+
 	        function createEntity() {
 	        	var entity = {
 	       			"firstName" : $("#firstName").val(),
@@ -116,7 +119,7 @@
         <hr>
         
 		<h2>Existing Developers</h2>
-		
+
         <ol id="entityList">
 			<li>
 				<span class="entityName"></span>
@@ -124,5 +127,5 @@
 				<a href="#" class="deleteLink">Delete</a>
 			</li>
 		</ol>
-		
+
 	</body></html>

@@ -30,7 +30,7 @@
         		
         	});
         	
-	        
+
         	function updateEntityDetails(id) {
         		$.ajax({
         			"url" : "rest/application/"+id,
@@ -77,18 +77,19 @@
 	</head>
 	<body>
     	<a href="applicationList.html">Applications</a>
-	
+    	<a href="flowList.html">Flows</a>
+
 		<h1>Application Details</h1>
-		
+
 		<h2>Application</h2>
-		
+
 		Name: <input id="name"/><br/>
 		Developer: <span id="developer"></span><br/>
 		<input type="hidden" id="entityId"/>
 		<a href="#" id="update">Update</a> <a href="#" id="delete">Delete</a>
 
 		<hr/>
-		
-		
+
+
 	</body>
  </html>

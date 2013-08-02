@@ -86,4 +86,9 @@ public class FlowService {
 			}
 		}
 	}
+	
+	public List<Flow> getAllFlowForApplication(int id){
+		List<Flow> allFlows = appDao.getFlowsForApplication(id);
+		return allFlows;
+	}
 }
