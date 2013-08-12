@@ -43,13 +43,19 @@ public class EventService {
 	}
 
 	public Event detailsEventService(String id) {
-		Event evt = eventDao.getEvent(id);
+		Event evt = eventDao.getEvent(Integer.parseInt(id));
 		return evt;
 	}
-	public List<Event> updateEventService(Event evt){
-		eventDao.updateEvent(evt.getLabel(),evt.getNodeSource(),evt.getNodeTarget(),evt.getId());		
+
+	public List<Event> updateEventService(int srcId, int tgtId, int eventId) {
+
+		if (srcId != 0 && tgtId != 0) {
+			Node nodeSrc = nodeDao.getNode(srcId);
+			Node nodeTgt = nodeDao.getNode(tgtId);
+			eventDao.updateEvent(nodeSrc, nodeTgt, eventId);
+		}
+
 		List<Event> events = eventDao.getAllEvents();
 		return events;
 	}
-
 }

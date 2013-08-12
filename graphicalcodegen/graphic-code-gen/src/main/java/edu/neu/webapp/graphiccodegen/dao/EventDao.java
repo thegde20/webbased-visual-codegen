@@ -27,8 +27,8 @@ public class EventDao {
 	}
 
 	// Returns a Developer object whose email is = value of email
-	public Event getEvent(String id) {
-		Event evt = em.find(Event.class, Integer.parseInt(id));
+	public Event getEvent(int id) {
+		Event evt = em.find(Event.class, id);
 		return evt;
 	}
 
@@ -54,10 +54,10 @@ public class EventDao {
 		return query.getResultList();
 	}
 	@Transactional
-	public void updateEvent(String label,Node ndSrc,Node ndTgt,int id){
+	public void updateEvent(Node ndSrc,Node ndTgt,int id){
 		Event evt = em.find(Event.class, id);
 		if(evt!= null){
-			evt.setLabel(label);
+			//evt.setLabel(label);
 			evt.setNodeSource(ndSrc);
 			evt.setNodeTarget(ndTgt);
 		}

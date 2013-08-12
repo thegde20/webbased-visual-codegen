@@ -74,4 +74,8 @@ public class ApplicationService {
 		getFlowsForApps(allApps);
 		return allApps;
 	}
+	public List<Application> getApplicationsForDeveloper(String email){
+		List<Application> apps = devDao.getAllApplicationsForDeveloper(email);
+		return apps;
+	}
 }

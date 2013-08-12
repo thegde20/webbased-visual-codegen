@@ -65,9 +65,9 @@ public class NodeController {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Node> update(Node updatedNode) {
-		List<Node> allNodes = nodeService.updateNodeService(updatedNode);
-		return allNodes;
+	public Node update(Node updatedNode) {
+		nodeService.updateNodeService(updatedNode);
+		return updatedNode;
 	}
 	@GET
 	@Path("/getNodesForFlow/{flowId}")

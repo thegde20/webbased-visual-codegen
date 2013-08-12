@@ -57,7 +57,7 @@ public class RunAppController {
 		String eventId = request.getParameter("eventID");
 		String forwardUrl = null;
 		if (eventId != null) {
-			Event e = eventDao.getEvent(eventId);
+			Event e = eventDao.getEvent(Integer.parseInt(eventId));
 			if (e != null) {
 				Node nodeTgt = e.getNodeTarget();
 				if (nodeTgt.getFlow() != null) {

@@ -47,6 +47,14 @@ public class ApplicationController {
 
 		return allApps;
 	}
+	@GET
+	@Path("/getApplicationForDev/{devId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Application> getApplicationForDeveloper(@PathParam("devId") String email) {
+		List<Application> allApps = appService.getApplicationsForDeveloper(email);
+
+		return allApps;
+	}
 	@DELETE
 	@Path("/{appId}")
 	@Produces(MediaType.APPLICATION_JSON)

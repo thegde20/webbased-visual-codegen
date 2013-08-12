@@ -63,10 +63,13 @@ public class EventController {
 	}
 
 	@POST
+	@Path("/update/{eId}/{ndSrcId}/{ndTgtId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Event> update(Event updatedEvt) {
-		List<Event> allEvents= eventService.updateEventService(updatedEvt);
+	public List<Event> update(@PathParam("eId") int eId,
+			@PathParam("ndSrcId") int ndSrcId,
+			@PathParam("ndTgtId") int ndTgtId) {
+		List<Event> allEvents= eventService.updateEventService(ndSrcId,ndTgtId,eId);
 		return allEvents;
 	}
 }

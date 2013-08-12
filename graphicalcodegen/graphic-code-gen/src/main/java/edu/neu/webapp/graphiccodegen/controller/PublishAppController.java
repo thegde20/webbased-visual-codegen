@@ -16,6 +16,7 @@ import edu.neu.webapp.graphiccodegen.services.PublishAppService;
 
 
 @Controller
+@Path("/publish")
 public class PublishAppController {
 
 	@Autowired
