@@ -47,12 +47,12 @@ public class EventService {
 		return evt;
 	}
 
-	public List<Event> updateEventService(int srcId, int tgtId, int eventId) {
+	public List<Event> updateEventService(int srcId, int tgtId, int eventId,String label) {
 
 		if (srcId != 0 && tgtId != 0) {
 			Node nodeSrc = nodeDao.getNode(srcId);
 			Node nodeTgt = nodeDao.getNode(tgtId);
-			eventDao.updateEvent(nodeSrc, nodeTgt, eventId);
+			eventDao.updateEvent(nodeSrc, nodeTgt, eventId,label);
 		}
 
 		List<Event> events = eventDao.getAllEvents();

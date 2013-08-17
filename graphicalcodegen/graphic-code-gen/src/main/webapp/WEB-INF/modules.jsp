@@ -88,6 +88,7 @@
 	
 		$("#createEntityLink").click(createEntity);
 		$("#updateEntityLink").click(updateEntity);
+		$("#updateLabel").click(editLabel);
 		//$("#createEntityLink").click(createEntity);
 		$("#publishLink").click(function() {
 			console.log('publish');
@@ -168,7 +169,7 @@
 			var targetId = "window" + entity.nodeTarget.id;
 			if (document.getElementById(sourceId)
 					&& document.getElementById(targetId)) {
-				//_connect(sourceId, targetId, entity.id);
+				_connect(sourceId, targetId, entity.id,entity.label);
 			}
 
 		}
@@ -220,6 +221,33 @@
 			}
 		});
 	}
+	function labelClick(label,event){
+		$("#editLabel").data("editLabel",label.component);
+		$.fancybox({
+			'href'   : '#editLabel',
+	        'titleShow'  : false,
+	        'transitionIn'  : 'elastic',
+	        'transitionOut' : 'elastic'
+		});
+	}
+	function editLabel() {
+		$.fancybox.close();
+		var data = $("#editLabel").data("editLabel");
+		var eId = data.getParameter("eventId");
+		var sId=data.getParameter("sId");
+		var tId=data.getParameter("tId");
+		console.log(eId+"----"+sId+"---"+tId);
+		var label =$("#label").val();
+		$.ajax({
+			"url" : "rest/event/update/" + eId + "/" + sId
+			+ "/" + tId+"/"+label,
+			"type" : "POST",
+			"success" : function(entities) {
+				populateConnections(entities);
+				
+			}
+		});
+	}
 </script>
 </head>
 <body data-demo-id="flowchartConnectorsDemo" data-library="jquery">
@@ -235,8 +263,8 @@
 		<a href="userFlow.html?appId=${sessionScope.appId}" id="flowLink">Flow</a>
 	</div>
 	</div>
-	<div style="width: 800px; float: left;">
-		<div id="main" style="width: 600px; float: left;">
+	<div style="width: 1000px; float: left;">
+		<div id="main" style="width: 1000px; float: left;">
 			<div class="window" style="top: 100px; left: 100px;float:left;width:200px;height:50px;">
 			<div class="value" style="width:100px;height:10px;float:left;"></div>
 			<div style="width:100px;float:left;height:10px;">
@@ -259,6 +287,10 @@
 			<option value="Form">Form</option>
 			<option value="DB">DB</option>
 		</select> <br /> <a href="#" id="createEntityLink">Create</a>
+	</div>
+	<div id="editLabel" style="display:none;width:400px;">
+	Label:<input type="text" name="label" id="label"/>
+	<a href="#" id="updateLabel">Update Label</a>
 	</div>
 
 

@@ -54,10 +54,10 @@ public class EventDao {
 		return query.getResultList();
 	}
 	@Transactional
-	public void updateEvent(Node ndSrc,Node ndTgt,int id){
+	public void updateEvent(Node ndSrc,Node ndTgt,int id,String label){
 		Event evt = em.find(Event.class, id);
 		if(evt!= null){
-			//evt.setLabel(label);
+			evt.setLabel(label);
 			evt.setNodeSource(ndSrc);
 			evt.setNodeTarget(ndTgt);
 		}

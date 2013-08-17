@@ -21,17 +21,12 @@
 					radius : 7
 				} ], [ "Dot", {
 					radius : 11
-				} ] ],
+				} ] ]
 				// the overlays to decorate each connection with. note that the
 				// label overlay uses a function to generate the label text; in
 				// this
 				// case it returns the 'labelText' member that we set on each
 				// connection in the 'init' method below.
-				ConnectionOverlays : [
-				// ["Arrow", { location: -40 }],
-				[ "Arrow", {
-					location : -10
-				} ] ]
 			});
 
 			// this is the paint style for the connecting lines..
@@ -106,6 +101,7 @@
 				connection.getOverlay("label").setLabel(
 						connection.sourceId.substring(6) + "-"
 								+ connection.targetId.substring(6));
+				console.log("init function");
 				connection.bind("editCompleted", function(o) {
 					// if (typeof console != "undefined")
 					console.log("connection edited. path is now ", o.path);
@@ -158,7 +154,7 @@
 			// "TopCenter"]);
 			// _addEndpoints("window6", ["BottomCenter"], ["LeftMiddle",
 			// "TopCenter"]);
-			_connect = function(sourceId, targetId, eId) {
+			_connect = function(sourceId, targetId, eId,labelFromDb) {
 				jsPlumb.connect({
 					source : sourceId,
 					target : targetId,
@@ -171,10 +167,23 @@
 					paintStyle : connectorPaintStyle,
 					parameters : {
 						"eventId" : eId,
+						"sId":sourceId.substring(6),
+						"tId":targetId.substring(6)
 					// "myOtherParam":789
 					},
 					hoverPaintStyle : connectorHoverStyle,
-					overlays : [ [ "Arrow", {
+					overlays : [ ["Label", {													   					
+	   					cssClass:"l1 component label",
+	   					label : labelFromDb, 
+	   					location:0.7,
+	   					id:"label",
+	   					events:{
+							"click":function(label, evt) {
+								labelClick(label,evt);
+	   						}
+	   					}
+	   				  } ],
+	   				  [ "Arrow", {
 						location : -10
 					} ] ],
 					// connectorHoverStyle:connectorHoverStyle
@@ -189,11 +198,13 @@
 
 						console.log("..in connect.."
 								+ connInfo.connection.getParameter("eventId"));
-						// init(connInfo.connection);
+						//init(connInfo.connection);
 						var eventId = connInfo.connection
 								.getParameter("eventId");
+		
 						if (eventId == null || eventId == undefined) {
 							console.log("create event");
+							
 							var connectionVar = connInfo.connection;
 							var sId = connectionVar.sourceId.substring(6);
 							var tId = connectionVar.targetId.substring(6);
@@ -242,9 +253,9 @@
 			// listen for clicks on connections, and offer to delete connections
 			// on click.
 			//
-			jsPlumb.bind("click", function(conn, originalEvent) {
+			jsPlumb.bind("dblclick", function(conn, originalEvent) {
 				if (confirm("Delete connection from " + conn.sourceId + " to "
-						+ conn.targetId + "?"))
+						+ conn.targetId + "?")){
 					jsPlumb.detach(conn);
 				var id = conn.getParameter("eventId");
 				$.ajax({
@@ -257,8 +268,8 @@
 						console.log(err);
 					}
 				});
+				}
 			});
-
 			jsPlumb.bind("connectionDrag", function(connection) {
 				console.log("connection " + connection.id
 						+ " is being dragged. suspendedElement is ",
@@ -280,9 +291,10 @@
 
 					var sId = connectionVar.sourceId.substring(6);
 					var tId = connectionVar.targetId.substring(6);
+					var label =connInfo.connection.getOverlay("label").getLabel();
 					$.ajax({
 						"url" : "rest/event/update/" + eventId + "/" + sId
-								+ "/" + tId,
+								+ "/" + tId+"/"+label,
 						"type" : "POST",
 						"success" : function(entities) {
 							populateConnections(entities);
