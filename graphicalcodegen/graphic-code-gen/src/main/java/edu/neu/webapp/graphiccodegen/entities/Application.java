@@ -27,7 +27,7 @@ public class Application implements Serializable {
 	private Developer developer;
 
 	//bi-directional many-to-one association to Flow
-	@OneToMany(mappedBy="application")
+	@OneToMany(mappedBy="application",cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Flow> flows =  new ArrayList<Flow>();
 
 	public Application() {

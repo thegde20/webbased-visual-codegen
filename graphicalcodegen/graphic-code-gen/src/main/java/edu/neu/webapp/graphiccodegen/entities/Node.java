@@ -37,11 +37,11 @@ public class Node implements Serializable {
 	private Flow flow;
 	
 	//bi-directional many-to-one association to Flow
-	@OneToMany(mappedBy="nodeSource")
+	@OneToMany(mappedBy="nodeSource",cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Event> sourceEvent;
 
 	//bi-directional many-to-one association to Flow
-	@OneToMany(mappedBy="nodeTarget")
+	@OneToMany(mappedBy="nodeTarget",cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Event> targetEvent;
 
 	public Node() {
