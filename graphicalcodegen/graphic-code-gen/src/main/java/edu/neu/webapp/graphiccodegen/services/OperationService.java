@@ -58,8 +58,6 @@ public class OperationService {
 			int dataStmtId2 = Integer.parseInt(request.getParameter("binaryData2"));
 			String operator = request.getParameter("binaryOperator");
 
-			//dataDao.updateDataById(resultId, dataStmtId1, dataStmtId2, operator);
-
 			numberOperationDao.persist(new NumberOperation(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), operationTypeDao.getOperationType(operationType), 
 					dataDao.getData(dataStmtId1), dataDao.getData(dataStmtId2),dataDao.getData(resultId), operator, dataDao.getData(0),null));
 
@@ -96,6 +94,16 @@ public class OperationService {
 
 			stringOperationDao.persist(new StringOperation(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), operationTypeDao.getOperationType(operationType), 
 					dataDao.getData(dataStmtId1), dataDao.getData(dataStmtId2),dataDao.getData(resultId), operator, 0, 0));
+		}else if(operationType.equalsIgnoreCase("Assignment")){
+
+			int resultId = Integer.parseInt(request.getParameter("assignmentData1"));
+			int dataStmtId1 = Integer.parseInt(request.getParameter("assignmentData1"));
+			int dataStmtId2 = Integer.parseInt(request.getParameter("assignmentData2"));
+			String operator = "=";
+
+			numberOperationDao.persist(new NumberOperation(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), operationTypeDao.getOperationType(operationType), 
+					dataDao.getData(dataStmtId1), dataDao.getData(dataStmtId2),dataDao.getData(resultId), operator, dataDao.getData(0),null));
+ 
 		}
 
 		codeGenUtils.renderPageValues(model);
@@ -118,7 +126,12 @@ public class OperationService {
 			updatedUnaryOperator*/
 		}else if(request.getParameter("numberOperationType").equalsIgnoreCase("Binary")){
 			
-		}else{
+		}else if(request.getParameter("numberOperationType").equalsIgnoreCase("Assignment")){
+			
+			int newAssignmentDataStmtId1 = Integer.parseInt(request.getParameter("updatedAssignmentData1"));
+			int newAssignmentDataStmtId2 = Integer.parseInt(request.getParameter("updatedAssignmentData2"));
+			
+			numberOperationDao.numberOperationAfterUpdate(operationStatementId, "Assignment", dataDao.getData(0), dataDao.getData(newAssignmentDataStmtId1), dataDao.getData(newAssignmentDataStmtId2), dataDao.getData(0), "=", null);
 			
 		}
 		

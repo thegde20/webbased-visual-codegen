@@ -9,6 +9,7 @@ import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import edu.neu.webapp.graphiccodegen.entities.Data;
 import edu.neu.webapp.graphiccodegen.entities.NumberOperation;
 
 @Component
@@ -31,6 +32,24 @@ public class NumberOperationDao {
 					em.remove(numberOperationStatement);
 				}
 			}
+			
+			@Transactional
+		    public void numberOperationAfterUpdate(int numberOperationStatementId, String operationType , Data newResult, Data newData1, Data newData2, Data newData3, String operator1, String operator2) {
+			
+		    	NumberOperation numberOperationStatement = em.find(NumberOperation.class, numberOperationStatementId);
+
+		    	if (numberOperationStatement != null) {
+		    		
+		    		if(operationType.equalsIgnoreCase("Assignment")){
+		    			
+		    			numberOperationStatement.setData1(newData1);
+		    			numberOperationStatement.setData2(newData2);
+		    			
+		    		}
+		    		
+		    	}
+		    }
+
 			
 			// Returns a NumberOperation object 
 			public NumberOperation getNumberOperation(int numberOperationStmtId) {
