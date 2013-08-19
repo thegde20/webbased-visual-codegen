@@ -59,6 +59,36 @@
 				</table>
 			</form>
 		</c:when>
+				<c:when test="${scriptstmtType eq 'Input'}">
+			<form name="inputform" method="POST" action="dataWithValues.html">
+				<table cellspacing="4" cellpadding="4">
+					<tr>
+						<th>Input Statement</th>
+					</tr>
+					<tr>
+						<td>Input Variable Name:</td>
+						<td><input type="text" name="varName" /></td>
+					</tr>
+					<tr>
+						<td>Input Type:</td>
+						<td><Select name="varType">
+								<option value="int">Integer</option>
+								<option value="double">Double</option>
+								<option value="boolean">Boolean</option>
+								<option value="String">String</option>
+								<option value="date">Date</option>
+						</Select></td>
+					</tr>
+					<tr>
+						<td>Input Value:</td>
+						<td><input type="text" name="varValue" value=0 /></td>
+					</tr>
+					<tr>
+						<td><input type="submit" value="Add Input variable" /></td>
+					</tr>
+				</table>
+			</form>
+		</c:when>
 		<c:when test="${scriptstmtType eq 'Branch'}">
 			<form name="variableform" method="POST" action="branchWithValues.html">
 				<table>
@@ -150,9 +180,9 @@
 										</tr>
 										<tr>
 											<td><select name="substringResult">
-													<c:forEach var="data" items="${dataStatements}">
-														<c:if test="${data.getDataType() eq 'String'}">
-															<option value="${data.getStatementId()}">${data.getDataName()}</option>
+													<c:forEach var="varObject" items="${sessionVariableObjects}">
+														<c:if test="${varObject.getDataType() eq 'String'}">
+															<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
 														</c:if>
 													</c:forEach>
 											</select></td>
@@ -173,10 +203,10 @@
 								<c:when test="${param.oType eq 'Concat'}">
 									<table>
 										<tr>
-											<th>Operand</th>
+											<th>Result</th>
 											<th>=</th>
-											<th>Operand</th>
-											<th>Concatenate with</th>										
+											<th>String1--</th>
+											<th>Concatenate(String2)</th>										
 										</tr>
 										<tr>
 											<td><select name="concatResult">
@@ -221,6 +251,11 @@
 															<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
 														</c:if>
 													</c:forEach>
+													<c:forEach var="inputObject" items="${sessionInputVariables}">
+														<c:if test="${inputObject.getDataType() eq 'double' or inputObject.getDataType() eq 'int'}">
+															<option value="${inputObject.getStatementId()}">${inputObject.getDataName()}</option>
+														</c:if>
+													</c:forEach>
 											</select></td>
 											<td><select name="binaryOperator">
 													<option value="+">+</option>
@@ -228,14 +263,16 @@
 													<option value="*">*</option>
 													<option value="/">/</option>
 													<option value="^">^</option>
-													<option value=">">&gt;</option>
-													<option value="<">&lt;</option>
-													<option value="==">==</option>
 											</select></td>
 											<td><select name="binaryData2">
 													<c:forEach var="varObject" items="${sessionVariableObjects}">
 														<c:if test="${varObject.getDataType() eq 'int' or varObject.getDataType() eq 'double'}">
 															<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
+														</c:if>
+													</c:forEach>
+													<c:forEach var="inputObject" items="${sessionInputVariables}">
+														<c:if test="${inputObject.getDataType() eq 'double' or inputObject.getDataType() eq 'int'}">
+															<option value="${inputObject.getStatementId()}">${inputObject.getDataName()}</option>
 														</c:if>
 													</c:forEach>
 											</select></td>
@@ -247,6 +284,41 @@
 														</c:if>
 													</c:forEach>
 											</select></td>
+											<td><input type="submit" value="Add operation" /></td>
+										</tr>
+									</table>
+								</c:when>
+								<c:when test="${param.oType eq 'Assignment'}">
+									<table>
+										<tr>
+											<th>Operand</th>
+											<th>Operator</th>
+											<th>Operand</th>
+										</tr>
+										<tr>
+											<td><select name="assignmentData1">
+													<c:forEach var="varObject" items="${sessionVariableObjects}">
+														<c:if test="${varObject.getDataType() eq 'int' or varObject.getDataType() eq 'double'}">
+															<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
+														</c:if>
+													</c:forEach>
+											</select></td>
+											<td>=</td>
+											<td><select name="assignmentData2">
+													<c:forEach var="varObject" items="${sessionVariableObjects}">
+														<c:if test="${varObject.getDataType() eq 'int' or varObject.getDataType() eq 'double'}">
+															<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
+														</c:if>
+													</c:forEach>
+													<c:forEach var="inputObject" items="${sessionInputVariables}">
+														<c:if test="${inputObject.getDataType() eq 'double' or inputObject.getDataType() eq 'int'}">
+															<option value="${inputObject.getStatementId()}">${inputObject.getDataName()}</option>
+														</c:if>
+													</c:forEach>
+											</select>
+											or 
+											<input type="text" name="assignmentLiteral" value=0 />
+											</td>
 											<td><input type="submit" value="Add operation" /></td>
 										</tr>
 									</table>
@@ -313,6 +385,57 @@
 			<th>Edit Statement</th>
 			<th>Update</th>
 		</tr>
+		<c:forEach var="inputStatement" items="${sessionInputVariables}">
+			<form method="POST" action="editdatastatement.html">
+				<tr>
+					<td><input type="submit" name="deleteAction" value="${inputStatement.getStatementId()}" /></td>
+					<td>${inputStatement.getStatementType().getsType()}</td>
+					<td><input type="text" size="50" name="detail" disabled="disabled" value="${inputStatement.getDataType()} ${inputStatement.getDataName()} = ${inputStatement.getInitDataValue()};" /></td>
+					<td>
+						<table>
+							<tr>
+								<th>Variable</th>
+								<th>Type</th>
+								<th>Value</th>
+							</tr>
+							<tr>
+								<td><input type="text" size="5" name="updatedVar" value="${inputStatement.getDataName()}" /></td>
+								<td><c:choose>
+										<c:when test="${inputStatement.getDataType() eq 'int'}">
+											<select name = "updatedType">
+												<option value="int" selected>Integer</option>
+												<option value="double">Double</option>
+												<option value="boolean">Boolean</option>
+												<option value="String">String</option>
+												<option value="date">Date</option>
+											</select>
+										</c:when>
+										<c:when test="${inputStatement.getDataType() eq 'String'}">
+											<select name = "updatedType">
+												<option value="int">Integer</option>
+												<option value="double">Double</option>
+												<option value="boolean">Boolean</option>
+												<option value="String" selected>String</option>
+												<option value="date">Date</option>
+											</select>
+										</c:when>
+										<c:when test="${inputStatement.getDataType() eq 'boolean'}">
+											<select name = "updatedType">
+												<option value="int">Integer</option>
+												<option value="double">Double</option>
+												<option value="boolean" selected>Boolean</option>
+												<option value="String">String</option>
+												<option value="date">Date</option>
+											</select>
+										</c:when>
+									</c:choose></td>
+								<td><input type="text" size="5" name="updatedVarValue" value="${inputStatement.getInitDataValue()}" /></td>
+							</tr></table>
+						</td>
+						<td><input type="submit" name="updateAction" value="${inputStatement.getStatementId()}" /></td>
+					</tr>
+			</form>
+		</c:forEach>
 		<c:forEach var="dataStatement" items="${sessionVariableObjects}">
 			<form method="POST" action="editdatastatement.html">
 				<tr>
@@ -368,7 +491,7 @@
 			<form method="POST" action="editnumberoperation.html">
 			<tr>
 				<td><input type="submit" name="deleteAction" value="${numberOperation.getStatementId()}" /></td>
-				<td>${numberOperation.getStatementType().getsType()} - ${numberOperation.getOperationType().getoType()}</td>
+				<td><input type="hidden" name="numberOperationType" value="${numberOperation.getOperationType().getoType()}" />${numberOperation.getStatementType().getsType()} - ${numberOperation.getOperationType().getoType()}</td>
 				<c:if test="${numberOperation.getOperationType().getoType() eq 'Unary'}">
 					<td><input type="text" size="50" name="detail" disabled="disabled" value="${numberOperation.getData1().getDataName()}${numberOperation.getOperator1()};" /></td>
 					<td>
@@ -429,10 +552,10 @@
 											<c:if test="${dataStatement.getDataType() eq 'int' or dataStatement.getDataType() eq 'double'}">
 											<c:choose>
 												<c:when test="${dataStatement.getDataName() eq numberOperation.getData1().getDataName()}">
-													<option value="${dataStatement.getDataName()}" selected="selected">${dataStatement.getDataName()}</option>
+													<option value="${dataStatement.getStatementId()}" selected="selected">${dataStatement.getDataName()}</option>
 												</c:when>
 												<c:otherwise>
-													<option value="${dataStatement.getDataName()}">${dataStatement.getDataName()}</option>
+													<option value="${dataStatement.getStatementId()}">${dataStatement.getDataName()}</option>
 												</c:otherwise>
 											</c:choose>
 											</c:if>
@@ -448,9 +571,7 @@
 												<option value="*">*</option>
 												<option value="/">/</option>
 												<option value="^">^</option>
-												<option value=">">&gt;</option>
-												<option value="<">&lt;</option>
-												<option value="==">==</option>
+												<option value="=">=</option>
 											</c:when>
 											<c:when test="${numberOperation.getOperator1() eq '-'}">
 												<option value="+">+</option>
@@ -458,9 +579,7 @@
 												<option value="*">*</option>
 												<option value="/">/</option>
 												<option value="^">^</option>
-												<option value=">">&gt;</option>
-												<option value="<">&lt;</option>
-												<option value="==">==</option>
+												<option value="=">=</option>
 											</c:when>
 											<c:when test="${numberOperation.getOperator1() eq '*'}">
 												<option value="+">+</option>
@@ -468,9 +587,7 @@
 												<option value="*" selected="selected">*</option>
 												<option value="/">/</option>
 												<option value="^">^</option>
-												<option value=">">&gt;</option>
-												<option value="<">&lt;</option>
-												<option value="==">==</option>
+												<option value="=">=</option>
 											</c:when>
 											<c:when test="${numberOperation.getOperator1() eq '/'}">
 												<option value="+">+</option>
@@ -478,9 +595,7 @@
 												<option value="*">*</option>
 												<option value="/" selected="selected">/</option>
 												<option value="^">^</option>
-												<option value=">">&gt;</option>
-												<option value="<">&lt;</option>
-												<option value="==">==</option>
+												<option value="=">=</option>
 											</c:when>
 											<c:when test="${numberOperation.getOperator1() eq '^'}">
 												<option value="+">+</option>
@@ -488,40 +603,16 @@
 												<option value="*">*</option>
 												<option value="/">/</option>
 												<option value="^" selected="selected">^</option>
-												<option value=">">&gt;</option>
-												<option value="<">&lt;</option>
-												<option value="==">==</option>
+												<option value="=">=</option>
 											</c:when>
-											<c:when test="${numberOperation.getOperator1() eq '>'}">
+											<c:when test="${numberOperation.getOperator1() eq '='}">
 												<option value="+">+</option>
 												<option value="-">-</option>
 												<option value="*">*</option>
 												<option value="/">/</option>
 												<option value="^">^</option>
-												<option value=">" selected="selected">&gt;</option>
-												<option value="<">&lt;</option>
-												<option value="==">==</option>
+												<option value="=" selected="selected">=</option>
 											</c:when>
-											<c:when test="${numberOperation.getOperator1() eq '<'}">
-												<option value="+">+</option>
-												<option value="-">-</option>
-												<option value="*">*</option>
-												<option value="/">/</option>
-												<option value="^">^</option>
-												<option value=">">&gt;</option>
-												<option selected="selected" value="<">&lt;</option>
-												<option value="==">==</option>
-											</c:when>
-											<c:otherwise>
-												<option value="+">+</option>
-												<option value="-">-</option>
-												<option value="*">*</option>
-												<option value="/">/</option>
-												<option value="^">^</option>
-												<option value=">">&gt;</option>
-												<option value="<">&lt;</option>
-												<option selected="selected" value="==">==</option>
-											</c:otherwise>
 										</c:choose>
 									</select>
 								</td>
@@ -531,10 +622,10 @@
 										<c:if test="${dataStatement.getDataType() eq 'int' or dataStatement.getDataType() eq 'double'}">
 											<c:choose>
 												<c:when test="${dataStatement.getDataName() eq numberOperation.getData2().getDataName()}">
-													<option value="${dataStatement.getDataName()}" selected="selected">${dataStatement.getDataName()}</option>
+													<option value="${dataStatement.getStatementId()}" selected="selected">${dataStatement.getDataName()}</option>
 												</c:when>
 												<c:otherwise>
-													<option value="${dataStatement.getDataName()}">${dataStatement.getDataName()}</option>
+													<option value="${dataStatement.getStatementId()}">${dataStatement.getDataName()}</option>
 												</c:otherwise>
 											</c:choose>
 										</c:if>
@@ -547,10 +638,10 @@
 										<c:if test="${dataStatement.getDataType() eq 'int' or dataStatement.getDataType() eq 'double'}">
 											<c:choose>
 												<c:when test="${dataStatement.getDataName() eq numberOperation.getResult().getDataName()}">
-													<option value="${dataStatement.getDataName()}" selected="selected">${dataStatement.getDataName()}</option>
+													<option value="${dataStatement.getStatementId()}" selected="selected">${dataStatement.getDataName()}</option>
 												</c:when>
 												<c:otherwise>
-													<option value="${dataStatement.getDataName()}">${dataStatement.getDataName()}</option>
+													<option value="${dataStatement.getStatementId()}">${dataStatement.getDataName()}</option>
 												</c:otherwise>
 											</c:choose>
 										</c:if>
@@ -570,12 +661,107 @@
 			<form method="POST" action="editstringoperation.html">
 			<tr>
 				<td><input type="submit" name="deleteAction" value="${stringOperation.getStatementId()}" /></td>
-				<td>${stringOperation.getStatementType().getsType()} - ${stringOperation.getOperationType().getoType()}</td>
+				<td><input type="hidden" name="stringOperationType" value="${stringOperation.getOperationType().getoType()}" />${stringOperation.getStatementType().getsType()} - ${stringOperation.getOperationType().getoType()}</td>
 				<c:if test="${stringOperation.getOperationType().getoType() eq 'Substring'}">
-					<td><input type="text" name="detail" disabled="disabled" value="${stringOperation.getResult().getDataName()} = ${stringOperation.getData1().getDataName()}.${stringOperation.getOperator1()}(${stringOperation.getIndex1()},${stringOperation.getIndex2()});" /></td>
+					<td><input type="text" size="50" name="detail" disabled="disabled" value="${stringOperation.getResult().getDataName()} = ${stringOperation.getData1().getDataName()}.${stringOperation.getOperator1()}(${stringOperation.getIndex1()},${stringOperation.getIndex2()});" /></td>
+					<td><table>
+							<tr>
+							 <th>Operand</th>
+							 <th>=</th>
+							 <th>Substring Of</th>
+							 <th>Start Index</th>
+							 <th>End Index</th>
+							</tr>
+							<tr>
+							<td><select name="updatedSubstringResult">
+								<c:forEach var="varObject" items="${sessionVariableObjects}">
+									<c:if test="${varObject.getDataType() eq 'String'}">
+									<c:choose>
+										<c:when test="${varObject.getDataName() eq stringOperation.getResult().getDataName()}">
+											<option value="${varObject.getStatementId()}" selected="selected">${varObject.getDataName()}</option>
+										</c:when>
+										<c:otherwise>
+											<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
+										</c:otherwise>
+									</c:choose>
+									</c:if>
+								</c:forEach>
+								</select></td>
+							<td>=</td>
+							<td><select name="updatedSubstringData1">
+							 		<c:forEach var="varObject" items="${sessionVariableObjects}">
+										<c:if test="${varObject.getDataType() eq 'String'}">
+										<c:choose>
+											<c:when test="${varObject.getDataName() eq stringOperation.getData1().getDataName()}">
+												<option value="${varObject.getStatementId()}" selected="selected">${varObject.getDataName()}</option>
+											</c:when>
+											<c:otherwise>
+												<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
+											</c:otherwise>
+										</c:choose>
+										</c:if>
+									</c:forEach>
+								</select></td>
+							<td><input type="text" size="5" name="updatedStartIndex" value="${stringOperation.getIndex1()}"/></td>
+							<td><input type="text" size="5" name="updatedEndIndex" value="${stringOperation.getIndex2()}"/></td>
+							</tr>
+						</table></td>
 				</c:if>
 				<c:if test="${stringOperation.getOperationType().getoType() eq 'Concat'}">
 					<td><input type="text" size="50" name="detail" disabled="disabled" value="${stringOperation.getResult().getDataName()} = ${stringOperation.getData1().getDataName()}.${stringOperation.getOperator1()}(${stringOperation.getData2().getDataName()});" /></td>
+					<td><table>
+							<tr>
+								<th>Result</th>
+								<th>=</th>
+								<th>String1--</th>
+								<th>Concatenate(String2)</th>										
+							</tr>
+							<tr>
+								<td><select name="UpdatedConcatResult">
+									<c:forEach var="varObject" items="${sessionVariableObjects}">
+										<c:if test="${varObject.getDataType() eq 'String'}">
+										<c:choose>
+											<c:when test="${varObject.getDataName() eq stringOperation.getResult().getDataName()}">
+												<option value="${varObject.getStatementId()}" selected="selected">${varObject.getDataName()}</option>
+											</c:when>
+											<c:otherwise>
+												<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
+											</c:otherwise>
+										</c:choose>
+										</c:if>
+									</c:forEach>
+									</select></td>
+								<td>=</td>
+								<td><select name="UpdatedConcatData1">
+										<c:forEach var="varObject" items="${sessionVariableObjects}">
+											<c:if test="${varObject.getDataType() eq 'String'}">
+											<c:choose>
+												<c:when test="${varObject.getDataName() eq stringOperation.getData1().getDataName()}">
+													<option value="${varObject.getStatementId()}" selected="selected">${varObject.getDataName()}</option>
+												</c:when>
+												<c:otherwise>
+													<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
+												</c:otherwise>
+											</c:choose>
+											</c:if>
+										</c:forEach>
+									</select></td>
+								<td><select name="UpdatedConcatData2">
+										<c:forEach var="varObject" items="${sessionVariableObjects}">
+											<c:if test="${varObject.getDataType() eq 'String'}">
+											<c:choose>
+												<c:when test="${varObject.getDataName() eq stringOperation.getData2().getDataName()}">
+													<option value="${varObject.getStatementId()}" selected="selected">${varObject.getDataName()}</option>
+												</c:when>
+												<c:otherwise>
+													<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
+												</c:otherwise>
+											</c:choose>
+											</c:if>
+										</c:forEach>
+									</select></td>
+							</tr>
+						</table></td>	
 				</c:if>
 				<td><input type="submit" name="updateAction" value="${stringOperation.getStatementId()}" /></td>
 			</tr>

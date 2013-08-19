@@ -28,7 +28,7 @@ public class CodeGenUtils {
 
 	@Autowired
     private DataDao dataDao;
-	
+
 	@Autowired
     private NumberOperationDao numberOperationDao;
 	
@@ -60,8 +60,11 @@ public class CodeGenUtils {
 		List<StatementType> stmtTypes = statementTypeDao.getAllStatementTypes();
 		model.put("statementTypes", stmtTypes);		
 
-		List<Data> dataStatements = dataDao.getAllDataStatements(scriptName);
+		List<Data> dataStatements = dataDao.getAllDeclarativeStatements(scriptName);
 		model.put("sessionVariableObjects", dataStatements);
+		
+		List<Data> inputStatements = dataDao.getAllInputStatements(scriptName); 
+		model.put("sessionInputVariables", inputStatements);
 
 		List<Branch> branchStatements = branchDao.getAllBranchStatements(scriptName);
 		model.put("branchStatements", branchStatements);

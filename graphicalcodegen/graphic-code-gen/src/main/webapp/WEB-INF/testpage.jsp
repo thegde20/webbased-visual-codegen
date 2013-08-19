@@ -41,6 +41,6 @@
 			<tr><td><input type="submit" name="Go" value="Send" /></td></tr>
 		</table>
 	</form>
-	<marquee>This is a test simulation of outer module</marquee>
+	<marquee>Sample input form</marquee>
 </body>
 </html>

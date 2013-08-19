@@ -22,7 +22,7 @@ import edu.neu.webapp.graphiccodegen.entities.Data;
 
 
 @Controller
-@SessionAttributes({"sessionScriptName", "sessionStatementType", "sessionVariableObjects"})
+@SessionAttributes({"sessionScriptName", "sessionStatementType", "sessionInputVariables"})
 public class TestController {
 	
 	@Autowired
@@ -57,22 +57,22 @@ public class TestController {
         String value2 = request.getParameter("value2");
         String type2 = request.getParameter("type2");
         
-        Data dataObject1 = new Data(statementTypeDao.getStatementType("Declarative"), scriptDao.getScript("script1"), var1, value1, type1);
-        Data dataObject2 = new Data(statementTypeDao.getStatementType("Declarative"), scriptDao.getScript("script1"), var2, value2, type2);
+        Data dataObject1 = new Data(statementTypeDao.getStatementType("Data"), scriptDao.getScript("script1"), var1, value1, type1, false);
+        Data dataObject2 = new Data(statementTypeDao.getStatementType("Data"), scriptDao.getScript("script1"), var2, value2, type2, false);
         
 		List<Data> dataArray = new ArrayList<Data>();
         
         dataArray.add(dataObject1);
         dataArray.add(dataObject2);
         
-        // Put the input variables array into a session object
-        model.put("sessionVariableObjects", dataArray);
+        // Put the data variables array into a session object
+        model.put("sessionInputVariables", dataArray);
         
         //Persisting the new data to the Data table in database
-        dataDao.persist(dataObject1);
-        dataDao.persist(dataObject2);
+   /*     dataDao.persist(dataObject1);
+        dataDao.persist(dataObject2);*/
         
-        return "mainmenu";
+        return "displayFinalValues";
     }
 
 	@RequestMapping(value = "/testpage")

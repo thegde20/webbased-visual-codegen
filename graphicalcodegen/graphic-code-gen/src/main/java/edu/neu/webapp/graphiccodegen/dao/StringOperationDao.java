@@ -9,6 +9,7 @@ import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import edu.neu.webapp.graphiccodegen.entities.Data;
 import edu.neu.webapp.graphiccodegen.entities.StringOperation;
 
 @Component
@@ -31,6 +32,32 @@ public class StringOperationDao {
 				em.remove(stringOperationStatement);
 			}
 		}
+		
+	    @Transactional
+	    public void StringOperationAfterUpdatedSubstring(int stringOperationStatementId, Data newResult, Data newData1, int newStartIndex, int newEndIndex) {
+		
+	    	StringOperation stringOperationStatement = em.find(StringOperation.class, stringOperationStatementId);
+
+	    	if (stringOperationStatement != null) {	
+	    		stringOperationStatement.setResult(newResult);
+	    		stringOperationStatement.setData1(newData1);
+	    		stringOperationStatement.setIndex1(newStartIndex);
+	    		stringOperationStatement.setIndex2(newEndIndex);
+	    	}
+	    }
+	    
+	    @Transactional
+	    public void StringOperationAfterUpdatedConcat(int stringOperationStatementId, Data newResult, Data newData1, Data newData2) {
+		
+	    	StringOperation stringOperationStatement = em.find(StringOperation.class, stringOperationStatementId);
+
+	    	if (stringOperationStatement != null) {	
+	    		
+	    		stringOperationStatement.setResult(newResult);
+	    		stringOperationStatement.setData1(newData1);
+	    		stringOperationStatement.setData2(newData2);
+	    	}
+	    }
 		
 		// Returns a StringOperation object 
 		public StringOperation getStringOperation(int stringOperationStmtId) {

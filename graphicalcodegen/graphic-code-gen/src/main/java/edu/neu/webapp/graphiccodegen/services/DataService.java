@@ -32,7 +32,11 @@ public class DataService {
         String dataType = request.getParameter("varType");
         String dataValue = request.getParameter("varValue");
 
-        dataDao.persist(new Data(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), dataName, dataValue, dataType));
+        if(scriptStmtType.equalsIgnoreCase("Input")){
+        	dataDao.persist(new Data(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), dataName, dataValue, dataType, false));
+        }else{
+        	dataDao.persist(new Data(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), dataName, dataValue, dataType, true));
+        }
         
         codeGenUtils.renderPageValues(model);
 	}

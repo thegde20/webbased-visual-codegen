@@ -1,5 +1,6 @@
 package edu.neu.webapp.graphiccodegen.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -32,7 +33,7 @@ public class DataDao {
 					}
 				}
 				
-				 // Updates the Data object
+				/* // Updates the Data object after an operation is performed -- commented as the value of data should change on running the application
 			    @Transactional
 			    public void updateDataById(int dataStatementId, int operand1, int operand2, String operator) {
 			    	
@@ -63,6 +64,8 @@ public class DataDao {
 			        } 
 			    }
 			    
+			    */
+				
 			    @Transactional
 				public void dataAfterUpdate(int dataStatementId, String dataName, String dataType, String initDataValue){
 			    	
@@ -94,4 +97,27 @@ public class DataDao {
 					return query.getResultList();
 				}
 				
+				public List<Data> getAllInputStatements(String scriptName){
+					
+					List<Data> allData = getAllDataStatements(scriptName);
+					List<Data> inputData = new ArrayList<Data>();
+					for(Data data : allData){
+						if(!data.getIsData()){
+							inputData.add(data);
+						}
+					}
+					return inputData;
+				}
+				
+				public List<Data> getAllDeclarativeStatements(String scriptName){
+					
+					List<Data> allData = getAllDataStatements(scriptName);
+					List<Data> declarativeData = new ArrayList<Data>();
+					for(Data data : allData){
+						if(data.getIsData()){
+							declarativeData.add(data);
+						}
+					}
+					return declarativeData;
+				}
 }

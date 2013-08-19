@@ -12,7 +12,7 @@ import edu.neu.webapp.graphiccodegen.services.CodeGenUtils;
 import edu.neu.webapp.graphiccodegen.services.OperationService;
 
 @Controller
-@SessionAttributes({"sessionScriptName", "sessionStatementType", "sessionOperationType", "sessionVariableObjects"})
+@SessionAttributes({"sessionScriptName", "sessionStatementType", "sessionOperationType", "sessionVariableObjects", "sessionInputVariables"})
 public class OperationController {
 
 	@Autowired

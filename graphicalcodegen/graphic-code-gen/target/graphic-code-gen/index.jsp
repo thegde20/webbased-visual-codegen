@@ -1,3 +1,3 @@
 
-<jsp:forward page="testpage.html" />
+<jsp:forward page="mainmenu.html" />
 

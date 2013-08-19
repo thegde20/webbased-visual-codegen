@@ -20,7 +20,7 @@
 	<context:component-scan base-package="edu.neu.webapp.graphiccodegen.controller" />
 	<context:component-scan base-package="edu.neu.webapp.graphiccodegen.dao" />
 	<context:component-scan base-package="edu.neu.webapp.graphiccodegen.entities" />
-	<context:component-scan base-package="edu.neu.webapp.graphiccodegen.service" />
+	<context:component-scan base-package="edu.neu.webapp.graphiccodegen.services" />
 	
 	<!-- Use @Controller annotations for MVC controller definitions -->
 	<mvc:annotation-driven />
@@ -33,7 +33,6 @@
 				class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver" />
 		</property>
 	</bean>
-
 	<!-- Add Transaction support -->
 	<bean id="myTxManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="emf" />
@@ -50,4 +49,38 @@
 			<value>.jsp</value>
 		</property>
 	</bean>
+	<bean name="/developer.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  
+    <property name="viewName" value="developerAjax"/>  
+</bean>
+<bean name="/developerDetails.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  
+    <property name="viewName" value="developerDetails"/>  
+</bean>  
+
+<bean name="/applicationList.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  
+    <property name="viewName" value="applicationList"/>  
+</bean>  
+
+<bean name="/applicationDetails.html" class="org.springframework.web.servlet.mvc.ParameterizableViewController">  
+    <property name="viewName" value="applicationDetails"/>  
+</bean>  
+<bean id="myProperties"
+      class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+  <property name="locations">
+    <list>
+      <value>/WEB-INF/config.properties</value>
+    </list>
+  </property>
+  </bean>
+	<bean id="codeGenUtils" class="edu.neu.webapp.graphiccodegen.services.CodeGenUtils"> </bean>
+	<bean id="dataService" class="edu.neu.webapp.graphiccodegen.services.DataService"> </bean>
+	<bean id="operationService" class="edu.neu.webapp.graphiccodegen.services.OperationService"> </bean>
+	<bean id="branchService" class="edu.neu.webapp.graphiccodegen.services.BranchService"> </bean>
+	<bean id="typeService" class="edu.neu.webapp.graphiccodegen.services.TypeService"> </bean>
+	<bean id="scriptService" class="edu.neu.webapp.graphiccodegen.services.ScriptService"> </bean>
+	<bean id="applicationService" class="edu.neu.webapp.graphiccodegen.services.ApplicationService"> </bean>
+	<bean id="developerService" class="edu.neu.webapp.graphiccodegen.services.DeveloperService"> </bean>
+	<bean id="flowService" class="edu.neu.webapp.graphiccodegen.services.FlowService"> </bean>
+	<bean id="nodeService" class="edu.neu.webapp.graphiccodegen.services.NodeService"> </bean>
+	<bean id="eventService" class="edu.neu.webapp.graphiccodegen.services.EventService"> </bean>
+	<bean id="publishAppService" class="edu.neu.webapp.graphiccodegen.services.PublishAppService"> </bean>
 </beans>

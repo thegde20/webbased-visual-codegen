@@ -58,7 +58,7 @@ public class OperationService {
 			int dataStmtId2 = Integer.parseInt(request.getParameter("binaryData2"));
 			String operator = request.getParameter("binaryOperator");
 
-			dataDao.updateDataById(resultId, dataStmtId1, dataStmtId2, operator);
+			//dataDao.updateDataById(resultId, dataStmtId1, dataStmtId2, operator);
 
 			numberOperationDao.persist(new NumberOperation(statementTypeDao.getStatementType(scriptStmtType), scriptDao.getScript(scriptName), operationTypeDao.getOperationType(operationType), 
 					dataDao.getData(dataStmtId1), dataDao.getData(dataStmtId2),dataDao.getData(resultId), operator, dataDao.getData(0),null));
@@ -111,6 +111,17 @@ public class OperationService {
 	
 	public void updateNumberOperation(ModelMap model, HttpServletRequest request) {
 		
+		int operationStatementId = Integer.valueOf(request.getParameter("updateAction"));
+		
+		if(request.getParameter("numberOperationType").equalsIgnoreCase("Unary")){
+		/*	updatedUnaryVar
+			updatedUnaryOperator*/
+		}else if(request.getParameter("numberOperationType").equalsIgnoreCase("Binary")){
+			
+		}else{
+			
+		}
+		
 		codeGenUtils.renderPageValues(model);
 		
 	}
@@ -124,8 +135,28 @@ public class OperationService {
 	
 	public void updateStringOperation(ModelMap model, HttpServletRequest request) {
 		
-		codeGenUtils.renderPageValues(model);
+		int operationStatementId = Integer.valueOf(request.getParameter("updateAction"));
 		
+		//updating Substring operation
+		if(request.getParameter("stringOperationType").equalsIgnoreCase("Substring")){
+			
+			int newResult = Integer.parseInt(request.getParameter("updatedSubstringResult"));
+			int newData1 = Integer.parseInt(request.getParameter("updatedSubstringData1"));
+			int newStartIndex = Integer.parseInt(request.getParameter("updatedStartIndex"));
+			int newEndIndex = Integer.parseInt(request.getParameter("updatedEndIndex"));
+			
+			stringOperationDao.StringOperationAfterUpdatedSubstring(operationStatementId, dataDao.getData(newResult), dataDao.getData(newData1), newStartIndex, newEndIndex);
+			
+		}
+		//updating Concat operation
+		else{
+			int newResultId = Integer.parseInt(request.getParameter("UpdatedConcatResult"));
+			int newDataStmtId1 = Integer.parseInt(request.getParameter("UpdatedConcatData1"));
+			int newDataStmtId2 = Integer.parseInt(request.getParameter("UpdatedConcatData2"));
+			
+			stringOperationDao.StringOperationAfterUpdatedConcat(operationStatementId, dataDao.getData(newResultId), dataDao.getData(newDataStmtId1), dataDao.getData(newDataStmtId2));
+		}
+		codeGenUtils.renderPageValues(model);
 	}
 	
 }
