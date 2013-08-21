@@ -3,8 +3,10 @@ package edu.neu.webapp.graphiccodegen.controller;
 import java.io.IOException;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
@@ -24,6 +26,9 @@ public class PublishAppController {
 
 	@Autowired
 	private ServletContext servletContext;
+	@Autowired
+	private HttpServletRequest request;
+	
 
 	// @RequestMapping(value = "/publishApp")
 	@GET
@@ -31,7 +36,8 @@ public class PublishAppController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void publishApp(@PathParam("appId") String appID) {
 		try {
-			publishAppService.createDirs(servletContext, appID);
+			System.out.println("request"+request.getContextPath());
+			publishAppService.createDirs(servletContext, appID,request);
 		} catch (IOException ioException) {
 			System.out.println("Exception IO in PublishAppService---");
 			ioException.printStackTrace();

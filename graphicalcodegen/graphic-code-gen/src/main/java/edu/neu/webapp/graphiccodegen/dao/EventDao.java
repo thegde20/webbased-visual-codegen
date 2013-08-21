@@ -26,11 +26,17 @@ public class EventDao {
 		em.persist(f);
 	}
 
-	// Returns a Developer object whose email is = value of email
+	// Returns a Event object whose id is = value of id
 	public Event getEvent(int id) {
 		Event evt = em.find(Event.class, id);
 		return evt;
 	}
+	// Returns a Event object whose id is = value of id
+		public Event getEventByLabel(String label) {
+			TypedQuery<Event> query = em.createQuery("SELECT d FROM Event d ORDER BY d.label where d.label = :label ", Event.class);
+			query.setParameter("label", label);
+			return query.getSingleResult();
+		}
 
 	// Retrieves all the StatementType:
 	public List<Event> getAllEvents() {

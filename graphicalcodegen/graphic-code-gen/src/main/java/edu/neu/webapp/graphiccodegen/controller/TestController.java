@@ -2,6 +2,7 @@ package edu.neu.webapp.graphiccodegen.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -56,7 +57,16 @@ public class TestController {
         String var2 = request.getParameter("var2");
         String value2 = request.getParameter("value2");
         String type2 = request.getParameter("type2");
-        
+        Map params = request.getParameterMap();
+		java.util.Iterator i = params.keySet().iterator();
+		List<Data> sessionData= new ArrayList<Data>();
+		while ( i.hasNext() )
+		{
+		String key = (String) i.next();
+		String value = ((String[]) params.get( key ))[ 0 ];
+		//Data d= new Data();
+		System.out.println("---"+key+"---"+value);
+		}
         Data dataObject1 = new Data(statementTypeDao.getStatementType("Data"), scriptDao.getScript("script1"), var1, value1, type1, false);
         Data dataObject2 = new Data(statementTypeDao.getStatementType("Data"), scriptDao.getScript("script1"), var2, value2, type2, false);
         

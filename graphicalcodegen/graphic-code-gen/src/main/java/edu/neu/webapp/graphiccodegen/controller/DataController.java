@@ -7,10 +7,12 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,11 +90,11 @@ public class DataController {
 	
 	//@RequestMapping(value="/displayVariableValues")
 	@POST
-	@Path("/{scriptName}/{filePath}")
+	@Path("/post")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String generateScriptContent(@PathParam("scriptName") String scriptName, @PathParam("filePath") String filePath, ModelMap model){
+	public String generateScriptContent(@QueryParam("scriptName") String scriptName, @QueryParam("filePath") String filePath){
 	//public String generateScriptContent(ModelMap model){
-		
 		 	try {
 			// Shift to Service class		
 			//String scriptName = String.valueOf(model.get("sessionScriptName"));
@@ -104,7 +106,7 @@ public class DataController {
 					"<%@taglib prefix=\"form\" uri=\"http://www.springframework.org/tags/form\"%>\n<%@ taglib prefix=\"c\" uri=\"http://java.sun.com/jsp/jstl/core\"%>" +
 					"\n<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n<html>\n<head>\n\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">" +
 					"\n\t<title>Final Values</title>\n</head>\n<body>\n\t<%\n");
-			if (statements != null) {
+			if (statements != null && statements.size() != 0) {
 				fileData.append("\tboolean x = true;\n" +
 						"\tint state = " + statements.get(0).getStatementId() + ";\n" +
 						"\t@SuppressWarnings(\"unchecked\")" +
@@ -145,7 +147,7 @@ public class DataController {
 			String path = url.getPath().substring(1, url.getPath().length()-8);
 			System.out.println(path);*/
 			//File jspFile = new File(path+"displayFinalValues.jsp");
-			File jspFile = new File(filePath+".jsp");
+			File jspFile = new File(filePath+"/"+scriptName+".jsp");
 			
 			// if file does not exist, then create it
 			if (!jspFile.exists()) {
@@ -161,7 +163,7 @@ public class DataController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			codeGenUtils.renderPageValues(model);
+			//codeGenUtils.renderPageValues(model);
 		}
 		return "Success";
 		//return "displayFinalValues";
