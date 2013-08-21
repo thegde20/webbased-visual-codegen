@@ -109,6 +109,21 @@
 	        'transitionOut' : 'elastic'
 		});
 	}
+	function deleteNode() {
+		var div = $(this).parent();
+		//var li = deleteLink.parents("li");
+		var entityId = div.data("entityId");
+		$.ajax({
+			"url" : "rest/node/" + entityId,
+			"type" : "DELETE",
+			"success" : function(entities) {
+				populateChart(entities);
+			},
+			"error" : function(err) {
+				console.log(err);
+			}
+		});
+	}
 	function getNodesForFlow(id, callback) {
 		$.ajax({
 			"url" : "rest/node/getNodesForFlow/" + id,
@@ -136,6 +151,9 @@
 			top = top + 100;
 			var entity = entities[i];
 			entityListItem = entityListItemTemplate.clone();
+			entityListItem.find("#imageDiv").data("entityId", entity.id);
+			
+			entityListItem.find("#imageClose").attr("src","css/close.jpeg");
 			entityListItem.find('.value').text(entity.name);
 			entityListItem.find("#editPropDiv").data("entity", entity);
 			//entityListItem.find("#editPropLink").onclick(editProperties);
@@ -153,6 +171,7 @@
 			jsPlumb.draggable($("#window"+entity.id));
 		}
 		$(".edit").on("click", editProperties);
+		$("#imageClose").on("click",deleteNode);
 		getEvents(populateConnections);
 		/*$.each($('#main'), function(i, left) {
 			$('div', left).click(function() {
@@ -266,6 +285,8 @@
 	<div style="width: 1000px; float: left;">
 		<div id="main" style="width: 1000px; float: left;">
 			<div class="window" style="top: 100px; left: 100px;float:left;width:200px;height:50px;">
+			<div id="imageDiv">
+			<img id="imageClose" src="" style="position:absolute;top:0px;right:0px;background-color:gray;"></div>
 			<div class="value" style="width:100px;height:10px;float:left;"></div>
 			<div style="width:100px;float:left;height:10px;">
 			<a href="" id="editContents" style="width:100px;height:10px;float:left">Edit contents</a>

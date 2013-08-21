@@ -7,6 +7,27 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Script Statements</title>
+<!-- <script src="js/jquery-min.js"></script> -->
+<!-- <script>
+
+$(function(){
+	$(".publishCode").click(createEntity);
+});
+
+function createEntity() {
+	
+	$.ajax({
+		"url" : "rest/data/script1",
+		"type" : "POST",
+		"success" : function(entities) {
+			alert("success");
+		},
+		"error" : function(error){
+			console.log(error);
+		}
+	});        
+}
+</script> -->
 </head>
 <body>
 	<a href="scriptMain.html">Scripts</a>
@@ -283,6 +304,11 @@
 															<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
 														</c:if>
 													</c:forEach>
+													<c:forEach var="inputObject" items="${sessionInputVariables}">
+														<c:if test="${inputObject.getDataType() eq 'double' or inputObject.getDataType() eq 'int'}">
+															<option value="${inputObject.getStatementId()}">${inputObject.getDataName()}</option>
+														</c:if>
+													</c:forEach>
 											</select></td>
 											<td><input type="submit" value="Add operation" /></td>
 										</tr>
@@ -300,6 +326,11 @@
 													<c:forEach var="varObject" items="${sessionVariableObjects}">
 														<c:if test="${varObject.getDataType() eq 'int' or varObject.getDataType() eq 'double'}">
 															<option value="${varObject.getStatementId()}">${varObject.getDataName()}</option>
+														</c:if>
+													</c:forEach>
+													<c:forEach var="inputObject" items="${sessionInputVariables}">
+														<c:if test="${inputObject.getDataType() eq 'double' or inputObject.getDataType() eq 'int'}">
+															<option value="${inputObject.getStatementId()}">${inputObject.getDataName()}</option>
 														</c:if>
 													</c:forEach>
 											</select></td>
@@ -670,6 +701,18 @@
 											</c:choose>
 										</c:if>
 										</c:forEach>
+										<c:forEach var="inputVariable" items="${sessionInputVariables}">
+										<c:if test="${inputVariable.getDataType() eq 'int' or inputVariable.getDataType() eq 'double'}">
+											<c:choose>
+												<c:when test="${inputVariable.getDataName() eq numberOperation.getResult().getDataName()}">
+													<option value="${inputVariable.getStatementId()}" selected="selected">${inputVariable.getDataName()}</option>
+												</c:when>
+												<c:otherwise>
+													<option value="${inputVariable.getStatementId()}">${inputVariable.getDataName()}</option>
+												</c:otherwise>
+											</c:choose>
+										</c:if>
+										</c:forEach>
 									</select></td>
 							</tr>
 						</table></td>
@@ -696,6 +739,18 @@
 												</c:otherwise>
 											</c:choose>
 											</c:if>
+										</c:forEach>
+										<c:forEach var="inputVariable" items="${sessionInputVariables}">
+										<c:if test="${inputVariable.getDataType() eq 'int' or inputVariable.getDataType() eq 'double'}">
+											<c:choose>
+												<c:when test="${inputVariable.getDataName() eq numberOperation.getData1().getDataName()}">
+													<option value="${inputVariable.getStatementId()}" selected="selected">${inputVariable.getDataName()}</option>
+												</c:when>
+												<c:otherwise>
+													<option value="${inputVariable.getStatementId()}">${inputVariable.getDataName()}</option>
+												</c:otherwise>
+											</c:choose>
+										</c:if>
 										</c:forEach>
 									</select>
 								</td>
@@ -860,7 +915,7 @@
 		</c:forEach>
 	</table>
 	<form method = "POST" action="displayVariableValues.html">
-	<input type="submit" value="Final Values" />
+	<input type="submit" value="Final Values" class="publishCode" />
 	</form>
 	</td>
 		</tr></table> 

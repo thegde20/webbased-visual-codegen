@@ -1,6 +1,7 @@
 package edu.neu.webapp.graphiccodegen.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Path;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import edu.neu.webapp.graphiccodegen.services.CodeGenUtils;
 import edu.neu.webapp.graphiccodegen.services.OperationService;
 
 @Controller
+@Path("/operation")
 @SessionAttributes({"sessionScriptName", "sessionStatementType", "sessionOperationType", "sessionVariableObjects", "sessionInputVariables"})
 public class OperationController {
 

@@ -4,10 +4,14 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +32,7 @@ import edu.neu.webapp.graphiccodegen.services.CodeGenUtils;
 import edu.neu.webapp.graphiccodegen.services.DataService;
 
 @Controller
+@Path("/data")
 @SessionAttributes({"sessionScriptName", "sessionStatementType", "sessionVariableObjects", "sessionInputVariables"})
 public class DataController {
 	
@@ -80,12 +85,17 @@ public class DataController {
 		codeGenUtils.renderPageValues(model);
 		return "scriptstatementpage";
 	}
-	 
-	 @RequestMapping(value="/displayVariableValues")
-	 public String displayDataValues(ModelMap model){
+	
+	//@RequestMapping(value="/displayVariableValues")
+	@POST
+	@Path("/{scriptName}/{filePath}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String generateScriptContent(@PathParam("scriptName") String scriptName, @PathParam("filePath") String filePath, ModelMap model){
+	//public String generateScriptContent(ModelMap model){
+		
 		 	try {
 			// Shift to Service class		
-			String scriptName = String.valueOf(model.get("sessionScriptName"));
+			//String scriptName = String.valueOf(model.get("sessionScriptName"));
 			List<Statement> statements = statementDao.getAllStatements(scriptName);
 			StringBuilder fileData = new StringBuilder();
 			fileData.append("<%@page import=\"java.util.List\"%>\n" +
@@ -123,17 +133,19 @@ public class DataController {
 						"\t\t\t\tbreak;\n\t\t}\n\t}\n" + updateSessionVariable(scriptName) +
 								"\tsession.setAttribute(\"sessionVariableObjects\", dataElements);\n" +
 								"\n\t%>\n");
+				fileData.append(sessionChecker());
 			}
 			else{
 				fileData.append("System.out.println(\"No Statements!\n\");");
 			}
-			fileData.append("</body>\n</html>");
+			fileData.append("\n</body>\n</html>");
 	
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			/*ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			URL url = classLoader.getResource("");
 			String path = url.getPath().substring(1, url.getPath().length()-8);
-			System.out.println(path);
-			File jspFile = new File(path+"displayFinalValues.jsp");
+			System.out.println(path);*/
+			//File jspFile = new File(path+"displayFinalValues.jsp");
+			File jspFile = new File(filePath+".jsp");
 			
 			// if file does not exist, then create it
 			if (!jspFile.exists()) {
@@ -151,7 +163,8 @@ public class DataController {
 		} finally {
 			codeGenUtils.renderPageValues(model);
 		}
-		 return "displayFinalValues";
+		return "Success";
+		//return "displayFinalValues";
 	 }
 	 
 	 // This function puts all the Data variables(which are likely to change) into the session
@@ -170,25 +183,26 @@ public class DataController {
 		return updateVariables.toString();
 	}
 
-	/*This function writes to the dynamically generated file, all the input variables that are present in the given script and also calls a function to check if the
-	input variable value is present in the session, if yes, then initializes it to the value in the session.*/
+	 /*This function writes to the dynamically generated file, all the input variables that are present in the given script and also calls a function to check if the
+		input variable value is present in the session, if yes, then initializes it to the value in the session, else initializes to default value.*/
 	 public String displayInputVariables(String scriptName) {
-	
+			
 		StringBuilder declaredInputs = new StringBuilder();
 		List<Data> inputStatements = dataDao.getAllInputStatements(scriptName);
 		for(Data inputStatement : inputStatements){
 			if(inputStatement.getDataType().equalsIgnoreCase("int")){
-				declaredInputs.append("\tint "+ inputStatement.getDataName() + " = "+inputStatement.getInitDataValue()+";\n" + checkInSession(inputStatement.getDataName(), "Integer.parseInt"));
+				declaredInputs.append("\tint "+ inputStatement.getDataName() + " = 0;\n\t"+inputStatement.getDataName()+" = Integer.parseInt(getValueFromSessionOnFind(\""+inputStatement.getDataName()+"\", \""+ inputStatement.getInitDataValue() +"\", inputElements));\n\n");				
 			}else if(inputStatement.getDataType().equalsIgnoreCase("float")){
-				declaredInputs.append("\tfloat "+ inputStatement.getDataName() + " = "+inputStatement.getInitDataValue()+";\n" + checkInSession(inputStatement.getDataName(), "Float.parseFloat"));
+				declaredInputs.append("\tfloat "+ inputStatement.getDataName() + " = 0.0;\n\t"+inputStatement.getDataName()+" = Float.parseFloat(getValueFromSessionOnFind(\""+inputStatement.getDataName()+"\", \""+ inputStatement.getInitDataValue() +"\", inputElements));\n\n");
 			}else if(inputStatement.getDataType().equalsIgnoreCase("boolean")){
-				declaredInputs.append("\tboolean "+ inputStatement.getDataName() + " = "+inputStatement.getInitDataValue()+";\n" + checkInSession(inputStatement.getDataName(), "Boolean.parseBoolean"));
+				declaredInputs.append("\tboolean "+ inputStatement.getDataName() + " = false;\n\t"+inputStatement.getDataName()+" = Boolean.parseBoolean(getValueFromSessionOnFind(\""+inputStatement.getDataName()+"\", \""+ inputStatement.getInitDataValue() +"\", inputElements));\n\n"); 
 			}else if(inputStatement.getDataType().equalsIgnoreCase("String")){
-				declaredInputs.append("\tString "+ inputStatement.getDataName() + " = \""+inputStatement.getInitDataValue()+"\";\n" + checkInSession(inputStatement.getDataName(), ""));
+				declaredInputs.append("\tString "+ inputStatement.getDataName() + " = \" \";\n\t" +inputStatement.getDataName()+" = getValueFromSessionOnFind(\""+inputStatement.getDataName()+"\", \""+ inputStatement.getInitDataValue() +"\", inputElements);\n\n"); 
 			}
 		}
 		return declaredInputs.toString();
 	}
+
 	 
 	// This function writes to the dynamically generated file, all the variable(data statements) that are present in the script and initializes them to a default value.
 	 public String displayVariables(String scriptName) {
@@ -208,13 +222,19 @@ public class DataController {
 		return declaredDataVariables.toString();
 	}
 
-	// This function writes to the file a for loop, which checks if the variables are anywhere in the session, if yes, then it assigns the variable the session value
-	public String checkInSession(String varName, String parserType){
-		 StringBuilder intVariables = new StringBuilder();
-		 intVariables.append("\tfor(int i = 0; i<inputElements.size(); i++){\n" +
-					 "\t\tif(inputElements.get(i).getDataName().equalsIgnoreCase(\"" + varName + "\")){\n" +					 
-					 "\t\t\t" + varName + " = " + parserType+ "(inputElements.get(i).getInitDataValue().toString());\n\t\t\tbreak;\n\t\t}\n\t}\n");		 
-		 return intVariables.toString();
+	/* This function writes to the file a function with parameters, which checks if the given variable 
+	 is anywhere in the given session object list, if yes, then it assigns the variable the session value, else it assigns the given default value*/
+	public String sessionChecker(){
+		
+		StringBuilder sessionFunction = new StringBuilder();
+		sessionFunction.append("\t<%!\n\t\tpublic String getValueFromSessionOnFind(String inputVar, String defaultValue, List<Data> inputElements){\n");
+		sessionFunction.append("\t\t\tfor(int i = 0; i<inputElements.size(); i++){\n");
+		sessionFunction.append("\t\t\t\tif(inputElements.get(i).getDataName().equalsIgnoreCase(inputVar)){\n");
+		sessionFunction.append("\t\t\t\t\tinputVar = inputElements.get(i).getInitDataValue().toString();\n\t\t\t\t\tbreak;\n");
+		sessionFunction.append("\t\t\t\t}else if(i+1==inputElements.size()){\n");
+		sessionFunction.append("\t\t\t\t\tinputVar = defaultValue;\n\t\t\t\t}\n\t\t\t}\n\t\t\treturn inputVar;\n\t\t}\n\t%>");
+				 
+		return sessionFunction.toString();
 	 }
 		 
 	//This writes to the file, inside the switch case, the various declarative statements
@@ -246,9 +266,14 @@ public class DataController {
 				 operationStatement.append("\t\t\t\t" + operation.getResult().getDataName() + " = " + operation.getData1().getDataName() + " " + operation.getOperator1() + " " + operation.getData2().getDataName() + ";\n");
 				 operationStatement.append("\t\t\t\tSystem.out.println(\"Value of resultant \" + " + operation.getResult().getDataName() + ");\n");
 				 break;
-			 }/*else if((operation.getStatementId() == stmtId) && (operation.getOperationType().getoType().equalsIgnoreCase("Substring"))){
-				 operationStatement.append("\t\t\t\t" + operation.getResult().getDataName() + " = " + operation.getData1().getDataName() + " " + operation.getOperator1() + " " + operation.getData2().getDataName() + ";\n");
-				 operationStatement.append("\t\t\t\tSystem.out.println(\"Value of resultant \" + " + operation.getResult().getDataName() + ");\n");*/
+			 }else if((operation.getStatementId() == stmtId) && (operation.getOperationType().getoType().equalsIgnoreCase("Assignment"))){
+				 operationStatement.append("\t\t\t\t"+ operation.getData1().getDataName() + " = " + operation.getData2().getDataName() + ";\n");
+				 operationStatement.append("\t\t\t\tSystem.out.println(\"Value of resultant \" + " + operation.getResult().getDataName() + ");\n");
+				 break;
+			 }else if((operation.getStatementId() == stmtId) && (operation.getOperationType().getoType().equalsIgnoreCase("Unary"))){
+				 
+			 }
+			 
 			 }
 		 List<StringOperation> stringOperations = stringOperationDao.getAllStringOperationStatements(scriptName);
 		 for(StringOperation stringOperation : stringOperations){

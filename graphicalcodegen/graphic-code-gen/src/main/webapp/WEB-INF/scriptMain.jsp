@@ -83,9 +83,9 @@ function getAllEntitiesService(callback) {
 $.ajax({
 		"url" : "rest/script/getScripts",
 	    // whether this is a POST or GET request
-	    type: "GET",
+	    "type": "GET",
 	    // the type of data we expect back
-	    dataType : "json",
+	    "dataType" : "json",
 		"success" : function(entities) {
 			callback(entities);
 		},
