@@ -7,27 +7,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Script Statements</title>
-<!-- <script src="js/jquery-min.js"></script> -->
-<!-- <script>
-
-$(function(){
-	$(".publishCode").click(createEntity);
-});
-
-function createEntity() {
-	
-	$.ajax({
-		"url" : "rest/data/script1",
-		"type" : "POST",
-		"success" : function(entities) {
-			alert("success");
-		},
-		"error" : function(error){
-			console.log(error);
-		}
-	});        
-}
-</script> -->
 </head>
 <body>
 	<a href="scriptMain.html">Scripts</a>
@@ -915,7 +894,7 @@ function createEntity() {
 		</c:forEach>
 	</table>
 	<form method = "POST" action="displayVariableValues.html">
-	<input type="submit" value="Final Values" class="publishCode" />
+	<input type="submit" value="Final Values" />
 	</form>
 	</td>
 		</tr></table> 
