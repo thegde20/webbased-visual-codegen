@@ -58,6 +58,7 @@
 
 </head>
 <body>
+<a href="mainmenu.html">Main Menu</a>
 Select Developer:
 <ol id="entityList">
 			<li>

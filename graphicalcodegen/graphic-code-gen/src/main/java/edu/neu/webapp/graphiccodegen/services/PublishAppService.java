@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,6 +17,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.gson.Gson;
 
 import edu.neu.webapp.graphiccodegen.entities.Application;
 import edu.neu.webapp.graphiccodegen.entities.Flow;
@@ -151,11 +154,9 @@ public class PublishAppService {
 
 						String reqURL = "http://" + request.getServerName()
 								+ ":" + request.getServerPort();
-						String input = "scriptName=" + nd.getName()
-								+ "&filePath=" + dir.getPath();
 						URL url = new URL(reqURL
 								+ servletContext.getContextPath()
-								+ "/rest/data/post?" + input);
+								+ "/rest/data/post");
 						System.out.println("URL--" + url);
 						HttpURLConnection conn = (HttpURLConnection) url
 								.openConnection();
@@ -163,6 +164,20 @@ public class PublishAppService {
 						conn.setRequestMethod("POST");
 						conn.setRequestProperty("Content-Type",
 								"application/json");
+						PublishParam param = new PublishParam();
+						param.setNodeName(nd.getName());
+						param.setPath(dir.getPath());
+						Gson gson = new Gson();
+						 
+						// convert java object to JSON format,
+						// and returned as JSON formatted string
+						String json = gson.toJson(param);
+					 
+						System.out.println("JSON-----"+json);
+						OutputStream os = conn.getOutputStream();
+						os.write(json.getBytes());
+						os.flush();
+				 
 
 						if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
 							throw new RuntimeException(

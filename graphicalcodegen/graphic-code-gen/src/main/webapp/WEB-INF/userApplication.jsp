@@ -12,7 +12,7 @@
         $(function(){
     		var url = $.url();
     		id = url.param("devId");
-    		
+    		console.log("dev ID----"+id);
     		entityList = $("#entityList");
         	entityListItemTemplate = $("#entityList li").clone();
 
@@ -62,7 +62,7 @@
     			"url" : "rest/application/addApp/"+name+"/"+id,
     			"type" : "POST",
     			"success" : function(entities) {
-    				updateEntityList(id,entities);
+    				updateEntityList(id);
     			}
     		});
     		}

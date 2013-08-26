@@ -73,7 +73,9 @@
 	        	        'onStart': function() { $("#addFlowLightbox").css("display","block"); },            
 	        	        'onClosed': function() { $("#addFlowLightbox").css("display","none"); }
 	        	    });
-	        	$("#createEntityLink").click(createEntity);
+	        	$("#createEntityLink").click(function(){
+	        		createEntity(appId);
+	        	});
 	        	$("#publishLink").click(function(){
 	        		publishApp(appId);
 	        		});
@@ -121,7 +123,7 @@
      		   });
      		});
 		}
-		 function createEntity() {
+		 function createEntity(id) {
 			 $.fancybox.close();
 	        	var name = $("#entityName").val();
 	        	var desc = $("#entityDesc").val();
@@ -130,7 +132,8 @@
      			"url" : "rest/flow/addFlow/"+name+"/"+desc+"/"+appId+"/"+parentId,
      			"type" : "POST",
      			"success" : function(entities) {
-     				populateChart(entities);
+     				//populateChart(entities);
+     				getFlowsApplication(id,populateChart);
      			}
      		});
 	        }

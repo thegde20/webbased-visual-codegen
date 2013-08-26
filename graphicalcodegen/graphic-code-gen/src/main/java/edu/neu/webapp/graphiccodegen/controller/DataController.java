@@ -10,9 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +29,7 @@ import edu.neu.webapp.graphiccodegen.entities.Statement;
 import edu.neu.webapp.graphiccodegen.entities.StringOperation;
 import edu.neu.webapp.graphiccodegen.services.CodeGenUtils;
 import edu.neu.webapp.graphiccodegen.services.DataService;
+import edu.neu.webapp.graphiccodegen.services.PublishParam;
 
 @Controller
 @Path("/data")
@@ -92,11 +90,11 @@ public class DataController {
 	@POST
 	@Path("/post")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public String generateScriptContent(@QueryParam("scriptName") String scriptName, @QueryParam("filePath") String filePath){
+	public String generateScriptContent(PublishParam param){
 	//public String generateScriptContent(ModelMap model){
 		 	try {
 			// Shift to Service class		
+		 		String scriptName = param.getNodeName();
 			//String scriptName = String.valueOf(model.get("sessionScriptName"));
 			List<Statement> statements = statementDao.getAllStatements(scriptName);
 			StringBuilder fileData = new StringBuilder();
@@ -147,7 +145,7 @@ public class DataController {
 			String path = url.getPath().substring(1, url.getPath().length()-8);
 			System.out.println(path);*/
 			//File jspFile = new File(path+"displayFinalValues.jsp");
-			File jspFile = new File(filePath+"/"+scriptName+".jsp");
+			File jspFile = new File(param.getPath()+"/"+scriptName+".jsp");
 			
 			// if file does not exist, then create it
 			if (!jspFile.exists()) {

@@ -77,16 +77,10 @@
 				$("#addNodeLightbox").css("display", "none");
 			}
 		});
-		/*$("#editPropLink").fancybox({
-			'onStart' : function() {
-				$("#editNodeDiv").css("display", "block");
-			},
-			'onClosed' : function() {
-				$("#editNodeDiv").css("display", "none");
-			}
-		});*/
-	
-		$("#createEntityLink").click(createEntity);
+		
+		$("#createEntityLink").click(function(){
+    		createEntity(flowId);
+    	});
 		$("#updateEntityLink").click(updateEntity);
 		$("#updateLabel").click(editLabel);
 		//$("#createEntityLink").click(createEntity);
@@ -113,6 +107,7 @@
 		var div = $(this).parent();
 		//var li = deleteLink.parents("li");
 		var entityId = div.data("entityId");
+		console.log("delete");
 		$.ajax({
 			"url" : "rest/node/" + entityId,
 			"type" : "DELETE",
@@ -152,11 +147,9 @@
 			var entity = entities[i];
 			entityListItem = entityListItemTemplate.clone();
 			entityListItem.find("#imageDiv").data("entityId", entity.id);
-			
 			entityListItem.find("#imageClose").attr("src","css/close.jpeg");
 			entityListItem.find('.value').text(entity.name);
 			entityListItem.find("#editPropDiv").data("entity", entity);
-			//entityListItem.find("#editPropLink").onclick(editProperties);
 			entityListItem.attr("id", "window" + entity.id);
 			entityListItem.attr("style", "top:" + top + "px;" + "left:" + top
 					+ "px;width:100px;height:50px");
@@ -171,14 +164,8 @@
 			jsPlumb.draggable($("#window"+entity.id));
 		}
 		$(".edit").on("click", editProperties);
-		$("#imageClose").on("click",deleteNode);
+		$(".imgClass").on("click",deleteNode);
 		getEvents(populateConnections);
-		/*$.each($('#main'), function(i, left) {
-			$('div', left).click(function() {
-				console.log("div clicked");
-				//window.location.href="modules.html?flowId="+$(this).data("entity").id;
-			});
-		});*/
 	}
 	function populateConnections(entities) {
 		jsPlumb.detachEveryConnection();
@@ -193,7 +180,7 @@
 
 		}
 	}
-	function createEntity() {
+	function createEntity(flowId) {
 		$.fancybox.close();
 		var name = $("#entityName").val();
 		var type = $("#entityType").val();
@@ -201,7 +188,7 @@
 			"url" : "rest/node/addNode/" + name + "/" + type + "/" + flowId,
 			"type" : "POST",
 			"success" : function(entities) {
-				populateChart(entities);
+				getNodesForFlow(flowId, populateChart);
 			}
 		});
 	}
@@ -235,7 +222,7 @@
 	        "dataType" : "json",
 			"type" : "POST",
 			"success" : function(entity) {
-				$("#window"+entity.id).find('.value').text(enitity.name);
+				$("#window"+entity.id).find('.value').text(entity.name);
 				
 			}
 		});
@@ -286,7 +273,7 @@
 		<div id="main" style="width: 1000px; float: left;">
 			<div class="window" style="top: 100px; left: 100px;float:left;width:200px;height:50px;">
 			<div id="imageDiv">
-			<img id="imageClose" src="" style="position:absolute;top:0px;right:0px;background-color:gray;"></div>
+			<img id="imageClose" src="" style="position:absolute;top:0px;right:0px;background-color:gray;" class="imgClass"></div>
 			<div class="value" style="width:100px;height:10px;float:left;"></div>
 			<div style="width:100px;float:left;height:10px;">
 			<a href="" id="editContents" style="width:100px;height:10px;float:left">Edit contents</a>
