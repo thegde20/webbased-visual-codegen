@@ -305,7 +305,7 @@
 		Node Name: <input type="text" name="name" id="entityName" /> <br />
 		Node Type: <select id="entityType">
 			<option value="IO">IO</option>
-			<option value="Form">Form</option>
+			<option value="Script">Script</option>
 			<option value="DB">DB</option>
 		</select> <br /> <a href="#" id="createEntityLink">Create</a>
 	</div>

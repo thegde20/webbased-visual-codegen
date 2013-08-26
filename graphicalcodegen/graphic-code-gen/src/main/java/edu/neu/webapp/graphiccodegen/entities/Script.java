@@ -5,18 +5,17 @@ import java.util.Collection;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Script implements Serializable{
+public class Script extends Node implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	@Id
+	//@Id
 	private String scriptName;
 	
 	@OneToMany(mappedBy = "script", cascade = CascadeType.ALL, orphanRemoval = true)
