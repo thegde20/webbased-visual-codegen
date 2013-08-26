@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,8 +101,7 @@ public class DataController {
 			//String scriptName = String.valueOf(model.get("sessionScriptName"));
 			List<Statement> statements = statementDao.getAllStatements(scriptName);
 			StringBuilder fileData = new StringBuilder();
-			fileData.append("<%@page import=\"java.util.List\"%>\n" +
-					"<%@page import =\"java.util.ArrayList\"%>\n" +
+			fileData.append("<%@page import =\"java.util.HashMap\"%>\n" +
 					"<%@page import=\"edu.neu.webapp.graphiccodegen.entities.*\"%>\n" +
 					"<%@taglib prefix=\"form\" uri=\"http://www.springframework.org/tags/form\"%>\n<%@ taglib prefix=\"c\" uri=\"http://java.sun.com/jsp/jstl/core\"%>" +
 					"\n<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n<html>\n<head>\n\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">" +
@@ -108,7 +110,7 @@ public class DataController {
 				fileData.append("\tboolean x = true;\n" +
 						"\tint state = " + statements.get(0).getStatementId() + ";\n" +
 						"\t@SuppressWarnings(\"unchecked\")" +
-						"\n\tList<Data> inputElements = (List<Data>) session.getAttribute(\"sessionInputVariables\");\n" 
+						"\n\tHashMap<String, String> inputElements = (HashMap<String, String>) session.getAttribute(\"sessionInputVariables\");\n" 
 						+ displayInputVariables(scriptName)
 						+ displayVariables(scriptName) 
 						+ "\twhile(x){\n" +
@@ -130,9 +132,8 @@ public class DataController {
 					fileData.append("\t\t\t\tbreak;\n");
 				}
 				fileData.append("\t\t\tdefault: x = false;\n" +
-						"\t\t\t\tbreak;\n\t\t}\n\t}\n" + updateSessionVariable(scriptName) +
-								"\tsession.setAttribute(\"sessionVariableObjects\", dataElements);\n" +
-								"\n\t%>\n");
+						"\t\t\t\tbreak;\n\t\t}\n\t}\n\n"+displayUpdatedVars(scriptName)+"\n\t%>\n");
+				fileData.append(updateSessionFunction());
 				fileData.append(sessionChecker());
 			}
 			else{
@@ -167,19 +168,25 @@ public class DataController {
 		//return "displayFinalValues";
 	 }
 	 
-	 // This function puts all the Data variables(which are likely to change) into the session
-	 public String updateSessionVariable(String scriptName){
-		StringBuilder updateVariables = new StringBuilder();
-		List<Data> dataStatements = dataDao.getAllDeclarativeStatements(scriptName);
-		updateVariables.append("\t@SuppressWarnings(\"unchecked\")" +
-						"\n\tList<Data> dataElements = (List<Data>) session.getAttribute(\"sessionVariableObjects\");\n" );
-		for(Data dataStatement : dataStatements){
-			updateVariables.append("\tfor(int i = 0; i<dataElements.size(); i++){\n" +
-					"\t\tif(dataElements.get(i).getDataName().equalsIgnoreCase(\"" + dataStatement.getDataName() + "\")){\n" +
-	 				"\t\t\tdataElements.get(i).setInitDataValue(String.valueOf("+ dataStatement.getDataName() +"));\n" +
-	 						"\t\t\tbreak;}}\n");
-		}
-				
+	private String displayUpdatedVars(String scriptName) {
+		 
+		 StringBuilder variablesToUpdate = new StringBuilder();
+		 List<Data> dataStatements = dataDao.getAllDataStatements(scriptName);
+		 for(Data dataStatement : dataStatements){
+			 variablesToUpdate.append("\tupdateSession(\""+dataStatement.getDataName()+"\", String.valueOf("+dataStatement.getDataName()+"), inputElements);\n"); 
+		 }
+		 	
+		 return variablesToUpdate.toString();
+	}
+
+	// This function puts all the Input and Declarative variables(which are likely to change) into the session
+	 public String updateSessionFunction(){
+		
+		 StringBuilder updateVariables = new StringBuilder();
+		updateVariables.append("\n\t<%!\n\t\tpublic void updateSession(String inputVar, String finalValue, HashMap<String, String> inputElements){\n");
+		updateVariables.append("\t\t\tinputElements.put(inputVar, finalValue);\n");
+		updateVariables.append("\t\t\tSystem.out.println(\"Value of \"+inputVar+\" = \"+inputElements.get(inputVar));\n\t\t}\n\t%>\n");
+						
 		return updateVariables.toString();
 	}
 
@@ -227,12 +234,12 @@ public class DataController {
 	public String sessionChecker(){
 		
 		StringBuilder sessionFunction = new StringBuilder();
-		sessionFunction.append("\t<%!\n\t\tpublic String getValueFromSessionOnFind(String inputVar, String defaultValue, List<Data> inputElements){\n");
-		sessionFunction.append("\t\t\tfor(int i = 0; i<inputElements.size(); i++){\n");
-		sessionFunction.append("\t\t\t\tif(inputElements.get(i).getDataName().equalsIgnoreCase(inputVar)){\n");
-		sessionFunction.append("\t\t\t\t\tinputVar = inputElements.get(i).getInitDataValue().toString();\n\t\t\t\t\tbreak;\n");
-		sessionFunction.append("\t\t\t\t}else if(i+1==inputElements.size()){\n");
-		sessionFunction.append("\t\t\t\t\tinputVar = defaultValue;\n\t\t\t\t}\n\t\t\t}\n\t\t\treturn inputVar;\n\t\t}\n\t%>");
+		sessionFunction.append("\t<%!\n\t\tpublic String getValueFromSessionOnFind(String inputVar, String defaultValue, HashMap<String, String> inputElements){\n");
+		sessionFunction.append("\t\t\tif(inputElements.containsKey(inputVar)){\n");
+		sessionFunction.append("\t\t\t\tSystem.out.println(\"Contains \"+ inputVar);\n");
+		sessionFunction.append("\t\t\t\tinputVar = inputElements.get(inputVar);\n");
+		sessionFunction.append("\t\t\t}else{\n");
+		sessionFunction.append("\t\t\t\tinputVar = defaultValue;\n\t\t\t}\n\t\t\treturn inputVar;\n\t\t}\n\t%>");
 				 
 		return sessionFunction.toString();
 	 }
