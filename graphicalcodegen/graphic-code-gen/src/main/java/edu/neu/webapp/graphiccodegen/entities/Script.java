@@ -3,6 +3,7 @@ package edu.neu.webapp.graphiccodegen.entities;
 import java.io.Serializable;
 import java.util.Collection;
 
+import javax.jdo.annotations.Column;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -25,9 +26,9 @@ public class Script extends Node implements Serializable {
 		super();
 	}*/
 
-	public Script(String name, Flow flow,String type, String scriptName, Collection<Statement> scriptStatements) {
+	public Script(String name, Flow flow,String type, Collection<Statement> scriptStatements) {
 		super(name, flow, type);
-		this.scriptName = scriptName;
+		this.scriptName = name;
 		this.scriptStatements = scriptStatements;
 	}
 
