@@ -21,12 +21,12 @@ public class Script extends Node implements Serializable {
 	@OneToMany(mappedBy = "script", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Collection<Statement> scriptStatements;
 
-	public Script() {
+	/*public Script() {
 		super();
-	}
+	}*/
 
-	public Script(String scriptName, Collection<Statement> scriptStatements) {
-		super();
+	public Script(String name, Flow flow,String type, String scriptName, Collection<Statement> scriptStatements) {
+		super(name, flow, type);
 		this.scriptName = scriptName;
 		this.scriptStatements = scriptStatements;
 	}
