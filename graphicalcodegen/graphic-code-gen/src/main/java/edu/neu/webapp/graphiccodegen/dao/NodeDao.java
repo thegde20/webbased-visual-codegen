@@ -23,7 +23,7 @@ public class NodeDao {
 	// Stores a new node
 	@Transactional
 	public void persist(Node nd) {
-		em.flush();
+		//em.flush();
 		em.persist(nd);
 	}
 

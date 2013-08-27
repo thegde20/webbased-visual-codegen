@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import edu.neu.webapp.graphiccodegen.dao.FlowDao;
 import edu.neu.webapp.graphiccodegen.dao.NodeDao;
+import edu.neu.webapp.graphiccodegen.dao.ScriptDao;
 import edu.neu.webapp.graphiccodegen.entities.Flow;
 import edu.neu.webapp.graphiccodegen.entities.Node;
+import edu.neu.webapp.graphiccodegen.entities.Script;
 
 public class NodeService {
 
@@ -15,11 +17,16 @@ public class NodeService {
 	private FlowDao flowDao;
 	@Autowired
 	private NodeDao nodeDao;
+	@Autowired
+	private ScriptDao scriptDao;
 
 	public List<Node> addNodeService(String name,String type,int flowId) {
 
 		Flow flowReq = flowDao.getFlow(flowId);
-		nodeDao.persist(new Node(name, flowReq, type));
+		if("Script".equalsIgnoreCase(type)){
+			scriptDao.persist(new Script(name,flowReq,type,null));
+		}else {
+		nodeDao.persist(new Node(name, flowReq, type));}
 		// app.getFlows().add(f);
 		List<Node> ndList = nodeDao.getAllNodes();
 		getSourceNodesForFlow(ndList);
